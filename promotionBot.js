@@ -14,7 +14,7 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
 // Construct and prepare an instance of the REST module
 let ranks = {};
 
-fs.readFile("./promotionBot/ranks.txt", "utf8", (err,data) => {
+fs.readFile("./ranks.txt", "utf8", (err,data) => {
     if(err){
         console.error(err);
     }else{
@@ -25,7 +25,7 @@ fs.readFile("./promotionBot/ranks.txt", "utf8", (err,data) => {
 
 let awards = [];
 
-fs.readFile("./promotionBot/awards.txt", "utf8", (err,data) => {
+fs.readFile("./awards.txt", "utf8", (err,data) => {
     if(err){
         console.error(err);
     }else{
@@ -36,7 +36,7 @@ fs.readFile("./promotionBot/awards.txt", "utf8", (err,data) => {
 
 let enlisted = {};
 
-fs.readFile("./promotionBot/enlisted.txt", "utf-8", (err, data) => {
+fs.readFile("./enlisted.txt", "utf-8", (err, data) => {
     if (err) {
         console.error(err)
     } else {
@@ -91,7 +91,7 @@ client.on('guildMemberAdd', member => {
         enlistee.rank = "RCT";
         enlisted[member.id] =  enlistee;
 
-        fs.writeFile("./promotionBot/enlisted.txt", JSON.stringify(enlisted), (err) => {
+        fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
             if(err){
                 console.log(err);
             }else{

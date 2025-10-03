@@ -42,7 +42,7 @@ module.exports = {
 
         console.log(enlisted);
 
-        fs.writeFile("./promotionBot/enlisted.txt", JSON.stringify(enlisted), (err) => {
+        fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
             if(err){
                 console.log(err);
             }else{

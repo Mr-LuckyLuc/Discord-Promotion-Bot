@@ -32,7 +32,7 @@ module.exports = {
         enlistee.nickname = nickname;
         enlisted[enlisteeId] = enlistee;
 
-        fs.writeFile("./promotionBot/enlisted.txt", JSON.stringify(enlisted), (err) => {
+        fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
             if(err){
                 console.log(err);
             }else{
