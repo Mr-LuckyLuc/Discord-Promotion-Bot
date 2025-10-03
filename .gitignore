@@ -1,0 +1,4 @@
+*.env
+Discord.js.code-workspace
+skipOnlineMessage.txt
+node_modules

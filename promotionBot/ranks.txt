@@ -1,0 +1,5 @@
+{
+    "RCT": {"name": "[E-1] RCT", "rank": "Recruit", "group": "-=Recruit=-"},
+    "PVT": {"name": "[E-1] PVT", "rank": "[E-1] Private", "group": "-=Junior Enlisted=-"},
+    "PFC": {"name": "[E-2] PFC", "rank": "[E-2] Private First Class", "group": "-=Junior Enlisted=-"}
+}
