@@ -36,12 +36,12 @@ module.exports = {
             if(err){
                 console.log(err);
             }else{
-                console.log('nicknames changed');
+                console.log('nickname changed');
             }
         });
 
         try{
-            await user.setNickname(ranks[enlisted[enlisteeId].name] + ' ' + nickname)
+            await user.setNickname(ranks[enlisted[enlisteeId].rank].name + ' ' + nickname)
             interaction.reply({content: "nickname changed succesfully", flags: MessageFlags.Ephemeral})
         } catch(err) {
             console.log(err);

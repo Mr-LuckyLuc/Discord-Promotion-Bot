@@ -9,7 +9,7 @@ const { Client, Collection, Events, GatewayIntentBits, REST, Routes} = require('
 
 // setup ----------------------------------------------
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers], autoReconnect: true });
 
 // Construct and prepare an instance of the REST module
 let ranks = {};
@@ -45,8 +45,8 @@ fs.readFile("./enlisted.txt", "utf-8", (err, data) => {
     }
 })
 
-const commandsPath = path.join(__dirname, "promotionBot");
-const commandsFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+const commandsPath = path.join(__dirname, "");
+const commandsFiles = fs.readdirSync(commandsPath).filter(file => {if (!(file === "promotionBot.js")) return file.endsWith('.js')});
 
 const commands = new Collection();
 
@@ -86,7 +86,7 @@ client.on('guildMemberAdd', member => {
         member.roles.add(group);
         member.roles.add(rank);
 
-        const name = member.user.username
+        const name = member.user.globalName
         enlistee.nickname = (name.length>20 ? name.slice(0,20) : name);
         enlistee.rank = "RCT";
         enlisted[member.id] =  enlistee;

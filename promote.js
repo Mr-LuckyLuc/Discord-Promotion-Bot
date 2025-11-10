@@ -12,6 +12,9 @@ module.exports = {
         const ranks = client.ranks;
         const enlisted = client.enlisted;
 
+        const promoterRank = enlisted[interaction.member.user.id].rank;
+        let underranked = false;
+
         // User ----------------
 
         const userSelect = new UserSelectMenuBuilder()
@@ -28,6 +31,11 @@ module.exports = {
 			.setPlaceholder('Make a selection!');
         
 		for (const [rank, _] of Object.entries(ranks)) {
+
+            if ((rank === promoterRank) || (underranked))  {
+                underranked = true;
+                continue;
+            }
             rankSelect.addOptions(
 				new StringSelectMenuOptionBuilder()
 					.setLabel(rank)

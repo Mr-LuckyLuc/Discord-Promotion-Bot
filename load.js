@@ -18,21 +18,21 @@ module.exports = {
         }));
         const members = await interaction.member.guild.members.fetch();
 
-        console.log(rankList);
-
         const enlisted = {};
 
         members.forEach(member => {
-            if (!member.user.bot && !(member.user.id == member.guild.ownerId)) {
+            if (!member.user.bot) {
                 const roles = member.roles.cache;
                 roles.forEach(role => {
-                    console.log(role.name)
-                    console.log(role.name in rankList)
 
                     if (role.name in rankList) {
                         Object.entries(ranks).forEach( ([i, rank]) => {
                             if (rank.rank === role.name) {
-                                enlisted[member.user.id] = {nickname: member.nickname.slice(rank.name.length+1), rank: i}
+                                try {
+                                    enlisted[member.user.id] = {nickname: member.nickname.slice(rank.name.length+1), rank: i}
+                                } catch {
+                                    enlisted[member.user.id] = {nickname: member.user.globalName.slice(0,30), rank: i}   
+                                }
                             }
                         })
                     }
