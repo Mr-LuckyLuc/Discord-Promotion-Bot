@@ -127,7 +127,7 @@ module.exports = {
                             user.roles.add(newExtra);
 
                             user.roles.add(I3);
-                            user.roles.add(civ);
+                            user.roles.remove(civ);
 
                             await user.setNickname(units[enlisted[enlisteeId].unit]["unit tag"] + ' ' + ranks[rank]["rank tag"] + ' ' + enlisted[enlisteeId].nickname)
 

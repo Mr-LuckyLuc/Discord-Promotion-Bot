@@ -36,7 +36,7 @@
         "staff permissions": true
     },
     "Warrant Officer Cadet": {
-        "rank tag": "WOC..",
+        "rank tag": "WOC.",
         "rank role": "Warrant Officer Cadet",
         "extra role": "Enlisted",
         "staff permissions": false
