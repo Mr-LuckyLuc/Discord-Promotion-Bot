@@ -13,6 +13,8 @@ module.exports = {
         const ranks = client.ranks;
         const units = client.units;
         const enlisted = client.enlisted;
+        
+        const interacterId = interaction.member.user.id;
 
         // User ----------------
 

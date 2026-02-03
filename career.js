@@ -12,6 +12,8 @@ module.exports = {
         const careers = client.careers;
         const enlisted = client.enlisted;
 
+        const interacterId = interaction.member.user.id;
+        
         // User ----------------
 
         const userSelect = new UserSelectMenuBuilder()
