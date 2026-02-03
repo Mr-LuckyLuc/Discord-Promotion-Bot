@@ -59,7 +59,10 @@ module.exports = {
 
         try {
             const reply = await interaction.fetchReply();
-            const userConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
+
+            let userConfirmation = {member: {id: 0}}
+
+            while (userConfirmation.member.id !== interacterId) userConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
 
             if (userConfirmation.customId === 'user') {
                 const enlisteeId = userConfirmation.values[0];
@@ -80,7 +83,11 @@ module.exports = {
 
                 try {
                     const reply = await interaction.fetchReply();
-                    const careerConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
+
+                    let careerConfirmation = {member: {id: 0}}
+
+                    while (careerConfirmation.member.id !== interacterId) careerConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
+
                     
                     if (careerConfirmation.customId === 'career') {
                         const career = careerConfirmation.values[0];

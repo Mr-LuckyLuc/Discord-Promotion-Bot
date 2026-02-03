@@ -14,7 +14,8 @@ module.exports = {
         const units = client.units;
         const enlisted = client.enlisted;
 
-        const promoterRank = enlisted[interaction.member.user.id].rank;
+        const interacterId = interaction.member.user.id;
+        const promoterRank = enlisted[interacterId].rank;
         let underranked = false;
 
         // User ----------------
@@ -72,7 +73,9 @@ module.exports = {
         try {
             const reply = await interaction.fetchReply();
 
-            const userConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
+            let userConfirmation = {member: {id: 0}}
+
+            while (userConfirmation.member.id !== interacterId) userConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
 
             if (userConfirmation.customId === 'user') {
                 const enlisteeId = userConfirmation.values[0];
@@ -94,7 +97,10 @@ module.exports = {
 
                 try {
                     const reply = await interaction.fetchReply();
-                    const rankConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
+
+                    let rankConfirmation = {member: {id: 0}}
+
+                    while (rankConfirmation.member.id !== interacterId) rankConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
                     
                     if (rankConfirmation.customId === 'rank') {
                         const rank = rankConfirmation.values[0];

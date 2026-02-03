@@ -38,7 +38,10 @@ module.exports = {
 
         try {
             const reply = await interaction.fetchReply();
-            const userConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
+
+            let userConfirmation = {member: {id: 0}}
+
+            while (userConfirmation.member.id !== interacterId) userConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
 
             if (userConfirmation.customId === 'user') {
                 const enlisteeId = userConfirmation.values[0];
