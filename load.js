@@ -18,13 +18,10 @@ module.exports = {
         }));
         const members = await interaction.member.guild.members.fetch();
 
-        console.log(members)
-
         const enlisted = {};
 
         members.forEach(member => {
             if (!member.user.bot) {
-                console.log(member)
                 let enlistee = {};
 
                 const name = member.user.globalName

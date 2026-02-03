@@ -60,6 +60,8 @@ module.exports = {
 
         try {
             const reply = await interaction.fetchReply();
+            console.log(reply);
+            
             const userConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
 
             if (userConfirmation.customId === 'user') {
@@ -96,7 +98,7 @@ module.exports = {
                                 if(err){
                                     console.log(err);
                                 }else{
-                                    console.log('rank changed');
+                                    console.log('unit changed');
                                 }
                             });
                             
