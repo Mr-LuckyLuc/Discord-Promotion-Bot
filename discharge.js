@@ -13,7 +13,7 @@ module.exports = {
         const ranks = client.ranks;
         const units = client.units;
         const enlisted = client.enlisted;
-        
+
         const interacterId = interaction.member.user.id;
 
         // User ----------------
@@ -62,7 +62,7 @@ module.exports = {
                 const oldUnit = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["unit role"]);
                 const oldUnitExtra = units[enlistee.unit]["extra role"]!==""?interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra role"]):undefined;
                 const I3 = interaction.guild.roles.cache.find(role => role.name === "I3");
-                const civ = interaction.guild.roles.cache.find(role => role.name === "civ");
+                const civ = interaction.guild.roles.cache.find(role => role.name === "Civ");
 
                 user.roles.remove(oldRank);
                 user.roles.remove(oldRankExtra);
