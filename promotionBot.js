@@ -23,16 +23,38 @@ fs.readFile("./ranks.txt", "utf8", (err,data) => {
     }
 });
 
-let awards = [];
+let units = {};
 
-fs.readFile("./awards.txt", "utf8", (err,data) => {
+fs.readFile("./units.txt", "utf8", (err,data) => {
     if(err){
         console.error(err);
     }else{
-        awards = data.split(",");
-        client.awards = awards;
+        units = JSON.parse(data);
+        client.units = units;
     }
 });
+
+let careers = {};
+
+fs.readFile("./careers.txt", "utf8", (err,data) => {
+    if(err){
+        console.error(err);
+    }else{
+        careers = JSON.parse(data);
+        client.careers = careers;
+    }
+});
+
+// let awards = [];
+
+// fs.readFile("./awards.txt", "utf8", (err,data) => {
+//     if(err){
+//         console.error(err);
+//     }else{
+//         awards = data.split(",");
+//         client.awards = awards;
+//     }
+// });
 
 let enlisted = {};
 
@@ -78,17 +100,12 @@ client.on('guildMemberAdd', member => {
     
     let enlistee = {};
 
-    if (member.id in enlisted) {
-        enlistee = enlisted[member.id];
-    } else {
-        const group = member.guild.roles.cache.find(role => role.name === '-=Recruit=-');
-        const rank = member.guild.roles.cache.find(role => role.name === 'Recruit');
-        member.roles.add(group);
-        member.roles.add(rank);
-
+    if (!(member.id in enlisted)) {
         const name = member.user.globalName
         enlistee.nickname = (name.length>20 ? name.slice(0,20) : name);
-        enlistee.rank = "RCT";
+        enlistee.rank = "Private";
+        enlistee.unit = "4th Infantry Platoon";
+        enlistee.career = "Rifleman";
         enlisted[member.id] =  enlistee;
 
         fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
@@ -98,6 +115,8 @@ client.on('guildMemberAdd', member => {
                 console.log('person added');
             }
         });
+
+        client.enlisted = enlisted
     }
     
     member.setNickname(ranks[enlistee.rank].name + ' ' + enlistee.nickname);

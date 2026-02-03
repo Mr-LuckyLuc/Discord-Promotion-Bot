@@ -1,1 +1,1 @@
-{"540576751005466637":{"nickname":"Cat on the Mountain","rank":"PFC"},"977866839013072926":{"nickname":"whyareallthenamestak","rank":"PFC"}}
+{"540576751005466637":{"nickname":"Cat on the Mountain","rank":"First Sergeant","unit":"4th Infantry Platoon","career":"Vehicle Specialist"},"977866839013072926":{"nickname":"subject","rank":"Corporal","unit":"Motala Helicopter Squadron, 1st","career":"Aircrew Specialist"}}

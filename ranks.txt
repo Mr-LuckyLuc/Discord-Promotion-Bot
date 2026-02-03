@@ -1,5 +1,68 @@
 {
-    "RCT": {"name": "[E-1] RCT", "rank": "Recruit", "group": "-=Recruit=-"},
-    "PVT": {"name": "[E-1] PVT", "rank": "[E-1] Private", "group": "-=Junior Enlisted=-"},
-    "PFC": {"name": "[E-2] PFC", "rank": "[E-2] Private First Class", "group": "-=Junior Enlisted=-"}
+    "Private": {
+        "rank tag": "PVT.",
+        "rank role": "Private",
+        "extra role": "Enlisted",
+        "staff permissions": false
+    },
+    "Private First Class": {
+        "rank tag": "PFC.",
+        "rank role": "Private First Class",
+        "extra role": "Enlisted",
+        "staff permissions": false
+    },
+    "Lance Corporal": {
+        "rank tag": "LCPL.",
+        "rank role": "Lance Corporal",
+        "extra role": "Enlisted",
+        "staff permissions": false
+    },
+    "Corporal": {
+        "rank tag": "CPL.",
+        "rank role": "Corporal",
+        "extra role": "Enlisted",
+        "staff permissions": true
+    },
+    "Sergeant": {
+        "rank tag": "SGT.",
+        "rank role": "Sergeant",
+        "extra role": "Enlisted",
+        "staff permissions": true
+    },
+    "First Sergeant": {
+        "rank tag": "1SGT.",
+        "rank role": "First Sergeant",
+        "extra role": "Enlisted",
+        "staff permissions": true
+    },
+    "Warrant Officer Cadet": {
+        "rank tag": "WOC..",
+        "rank role": "Warrant Officer Cadet",
+        "extra role": "Enlisted",
+        "staff permissions": false
+    },
+    "Warrant Officer 1": {
+        "rank tag": "WO1.",
+        "rank role": "Warrant Officer 1",
+        "extra role": "Enlisted",
+        "staff permissions": false
+    },
+    "Lieutenant": {
+        "rank tag": "LT.",
+        "rank role": "First Sergeant",
+        "extra role": "Officer",
+        "staff permissions": true
+    },
+    "Captain": {
+        "rank tag": "CPT.",
+        "rank role": "Captain",
+        "extra role": "Officer",
+        "staff permissions": true
+    },
+    "Major": {
+        "rank tag": "MAJ.",
+        "rank role": "Major",
+        "extra role": "Officer",
+        "staff permissions": true
+    }
 }

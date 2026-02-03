@@ -5,17 +5,14 @@ const fs = require('node:fs');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('promote')
-		.setDescription('Promote somebody!'),
+		.setName('unit')
+		.setDescription('assign somebody to a unit!'),
         
 	async execute(interaction) {
         const client = interaction.client;
         const ranks = client.ranks;
         const units = client.units;
         const enlisted = client.enlisted;
-
-        const promoterRank = enlisted[interaction.member.user.id].rank;
-        let underranked = false;
 
         // User ----------------
 
@@ -28,26 +25,21 @@ module.exports = {
 		
         // Rank ----------------
 
-        const rankSelect = new StringSelectMenuBuilder()
-			.setCustomId('rank')
+        const unitSelect = new StringSelectMenuBuilder()
+			.setCustomId('unit')
 			.setPlaceholder('Make a selection!');
         
-		for (const [rank, _] of Object.entries(ranks)) {
-
-            if ((rank === promoterRank) || (underranked))  {
-                underranked = true;
-                continue;
-            }
-            rankSelect.addOptions(
+		for (const [unit, _] of Object.entries(units)) {
+            unitSelect.addOptions(
 				new StringSelectMenuOptionBuilder()
-					.setLabel(rank)
-					.setDescription('Promote the person to ' + rank )
-					.setValue(rank)
+					.setLabel(unit)
+					.setDescription('Assign the person to ' + unit )
+					.setValue(unit)
             )
         }
 
-		const rankRow = new ActionRowBuilder()
-			.addComponents(rankSelect);
+		const unitRow = new ActionRowBuilder()
+			.addComponents(unitSelect);
 
 
 		const cancel = new ButtonBuilder()
@@ -61,7 +53,7 @@ module.exports = {
     // messages -------------------------------
 
         interaction.reply({
-            content: `Who do you want to promote?`,
+            content: `Who do you want to transfer?`,
 			components: [userRow, cancelRow],
         });
 
@@ -75,8 +67,8 @@ module.exports = {
                 const user = await interaction.guild.members.fetch(enlisteeId);
                 const enlistee = enlisted[enlisteeId];
 
-                const oldRank = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["rank role"]);
-                const oldExtra = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["extra role"]);
+                const oldUnit = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["unit role"]);
+                const oldExtra = units[enlistee.unit]["extra role"]!=="" ? interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra role"]) : undefined;
 
                 if (enlisteeId == interaction.guild.ownerId) {
                     await userConfirmation.update({content: "No permission to change this soldier (server owner)", components: []});
@@ -84,20 +76,20 @@ module.exports = {
                 }
 
                 userConfirmation.update({
-                    content: `What rank do you want to promote to?`,
-                    components: [rankRow, cancelRow],
+                    content: `What unit do you want to transfer to?`,
+                    components: [unitRow, cancelRow],
                 })
 
                 try {
                     const reply = await interaction.fetchReply();
-                    const rankConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
+                    const unitConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
                     
-                    if (rankConfirmation.customId === 'rank') {
-                        const rank = rankConfirmation.values[0];
+                    if (unitConfirmation.customId === 'unit') {
+                        const unit = unitConfirmation.values[0];
 
                         try{
 
-                            enlistee.rank = rank;
+                            enlistee.unit = unit;
                             enlisted[enlisteeId] = enlistee;
                     
                             fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
@@ -108,22 +100,19 @@ module.exports = {
                                 }
                             });
                             
-                            const newRank = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["rank role"]);
-                            const newExtra = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["extra role"]);
-                            const staffPermissions = await interaction.guild.roles.cache.find(role => role.name === "Staff Permissions");
+                            const newUnit = await interaction.guild.roles.cache.find(role => role.name === units[unit]["unit role"]);
+                            const newExtra = units[unit]["extra role"]!=="" ? interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra role"]) : undefined;
                             
-                            user.roles.remove(oldRank);
-                            user.roles.add(newRank);
+                            user.roles.remove(oldUnit);
+                            user.roles.add(newUnit);
 
-                            if (ranks[rank]["staff permissions"]) {user.roles.add(staffPermissions)} else {user.roles.remove(staffPermissions)}
+                            oldExtra && user.roles.remove(oldExtra);
+                            newExtra && user.roles.add(newExtra);
+                            
+                            await user.setNickname(units[unit]["unit tag"] + ' ' + ranks[enlisted[enlisteeId].rank]["rank tag"] + ' ' + enlisted[enlisteeId].nickname)
 
-                            user.roles.remove(oldExtra);
-                            user.roles.add(newExtra);
-
-                            await user.setNickname(units[enlisted[enlisteeId].unit]["unit tag"] + ' ' + ranks[rank]["rank tag"] + ' ' + enlisted[enlisteeId].nickname)
-
-                            rankConfirmation.update({
-                                content: `Changed ${enlisted[enlisteeId].nickname}'s rank to ${rank}.`,
+                            unitConfirmation.update({
+                                content: `Changed ${enlisted[enlisteeId].nickname}'s unit to ${unit}.`,
                                 components: [],
                             });
                         } catch(err) {
@@ -132,7 +121,7 @@ module.exports = {
                             await interaction.update("Something went wrong")
                         }
 
-                    } else if (rankConfirmation.customId === 'cancel') {
+                    } else if (unitConfirmation.customId === 'cancel') {
                         await interaction.editReply({ content: 'Cancelled', components: [] });
                         return;
                     }

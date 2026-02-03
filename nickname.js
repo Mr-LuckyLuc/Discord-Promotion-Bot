@@ -41,7 +41,7 @@ module.exports = {
         });
 
         try{
-            await user.setNickname(ranks[enlisted[enlisteeId].rank].name + ' ' + nickname)
+            await user.setNickname(units[enlisted[enlisteeId].unit]["unit tag"] + ' ' + ranks[enlisted[enlisteeId].rank]["rank tag"] + ' ' + nickname)
             interaction.reply({content: "nickname changed succesfully", flags: MessageFlags.Ephemeral})
         } catch(err) {
             console.log(err);

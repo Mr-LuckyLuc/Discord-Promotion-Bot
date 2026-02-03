@@ -1,0 +1,7 @@
+{
+    "Rifleman": {"role": "Rifleman"}, 
+    "SAW Gunner": {"role": "SAW Gunner"}, 
+    "Marksman": {"role": "Marksman"}, 
+    "Vehicle Specialist": {"role": "Vehicle Specialist"}, 
+    "Aircrew Specialist": {"role": "Aircrew Specialist"}
+}
