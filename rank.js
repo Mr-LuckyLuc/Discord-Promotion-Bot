@@ -71,7 +71,6 @@ module.exports = {
 
         try {
             const reply = await interaction.fetchReply();
-            console.log(reply);
 
             const userConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
 
@@ -116,6 +115,8 @@ module.exports = {
                             const newRank = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["rank role"]);
                             const newExtra = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["extra role"]);
                             const staffPermissions = await interaction.guild.roles.cache.find(role => role.name === "Staff Permissions");
+                            const I3 = await interaction.guild.roles.cache.find(role => role.name === "I3");
+                            const civ = await interaction.guild.roles.cache.find(role => role.name === "civ");
                             
                             user.roles.remove(oldRank);
                             user.roles.add(newRank);
@@ -124,6 +125,9 @@ module.exports = {
 
                             user.roles.remove(oldExtra);
                             user.roles.add(newExtra);
+
+                            user.roles.add(I3);
+                            user.roles.add(civ);
 
                             await user.setNickname(units[enlisted[enlisteeId].unit]["unit tag"] + ' ' + ranks[rank]["rank tag"] + ' ' + enlisted[enlisteeId].nickname)
 

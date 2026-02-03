@@ -60,7 +60,6 @@ module.exports = {
 
         try {
             const reply = await interaction.fetchReply();
-            console.log(reply);
             
             const userConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
 

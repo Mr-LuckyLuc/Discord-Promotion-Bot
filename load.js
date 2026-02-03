@@ -27,10 +27,6 @@ module.exports = {
             return [career["role"], i]
         }));
 
-        console.log(rankList);
-        console.log(unitList);
-        console.log(careerList);
-
         const enlisted = {};
 
         members.forEach(member => {
@@ -50,28 +46,23 @@ module.exports = {
                 const roles = member.roles.cache;
                 
                 roles.forEach(role => {
-                    console.log(role.name)
-                    console.log(role.name in rankList)
-                    console.log(role.name in unitList)
-                    console.log(role.name in careerList)
 
                     if (role.name in rankList) {
                         Object.entries(rankList).forEach( ([i, rank]) => {
                             if (i === role.name) {
                                 enlisted[member.user.id].rank = rank
-                                
                             }
                         })
                     }
                     if (role.name in unitList) {
-                        Object.entries(units).forEach( ([i, unit]) => {
+                        Object.entries(unitList).forEach( ([i, unit]) => {
                             if (i === role.name) {
                                 enlisted[member.user.id].unit = unit
                             }
                         })
                     }
                     if (role.name in careerList) {
-                        Object.entries(careers).forEach( ([i, career]) => {
+                        Object.entries(careerList).forEach( ([i, career]) => {
                             if (i === role.name) {
                                 enlisted[member.user.id].career = career
                             }
