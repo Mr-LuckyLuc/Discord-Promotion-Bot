@@ -18,25 +18,31 @@ module.exports = {
         }));
         const members = await interaction.member.guild.members.fetch();
 
+        console.log(members)
+
         const enlisted = {};
 
         members.forEach(member => {
             if (!member.user.bot) {
-                const roles = member.roles.cache;
-                roles.forEach(role => {
+                console.log(member)
+                let enlistee = {};
 
-                    if (role.name in rankList) {
-                        Object.entries(ranks).forEach( ([i, rank]) => {
-                            if (rank.rank === role.name) {
-                                try {
-                                    enlisted[member.user.id] = {nickname: member.nickname.slice(rank.name.length+1), rank: i}
-                                } catch {
-                                    enlisted[member.user.id] = {nickname: member.user.globalName.slice(0,30), rank: i}   
-                                }
-                            }
-                        })
+                const name = member.user.globalName
+                enlistee.nickname = (name.length>20 ? name.slice(0,20) : name);
+                enlistee.rank = "Private";
+                enlistee.unit = "4th Infantry Platoon";
+                enlistee.career = "Rifleman";
+                enlisted[member.id] =  enlistee;
+        
+                fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
+                    if(err){
+                        console.log(err);
+                    }else{
+                        console.log('person added');
                     }
                 });
+        
+                client.enlisted = enlisted
             }
         }); 
 

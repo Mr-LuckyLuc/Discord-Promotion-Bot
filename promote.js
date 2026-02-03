@@ -5,7 +5,7 @@ const fs = require('node:fs');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('promote')
+		.setName('rank')
 		.setDescription('Promote somebody!'),
         
 	async execute(interaction) {
