@@ -1,1 +1,1 @@
-{}
+{"540576751005466637":{"rank":"Major","unit":"4th Infantry Platoon","career":"Rifleman","nickname":"utLonger"},"977866839013072926":{"rank":"Private First Class","unit":"4th Infantry Platoon","career":{"role":"Aircrew Specialist"},"nickname":"test"}}

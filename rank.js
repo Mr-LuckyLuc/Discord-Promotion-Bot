@@ -38,6 +38,9 @@ module.exports = {
                 underranked = true;
                 continue;
             }
+
+            
+
             rankSelect.addOptions(
 				new StringSelectMenuOptionBuilder()
 					.setLabel(rank)
@@ -69,7 +72,7 @@ module.exports = {
         try {
             const reply = await interaction.fetchReply();
             console.log(reply);
-            
+
             const userConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
 
             if (userConfirmation.customId === 'user') {

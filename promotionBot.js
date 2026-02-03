@@ -1,5 +1,11 @@
 console.log("Starting");
 
+const util = require('util') // or: import util from 'util'
+
+// Set the default depth to null to remove the recursion limit.
+// All  subsequent console.log() and console.dir() calls will use this default.
+util.inspect.defaultOptions.depth = null
+
 require("dotenv").config({ path: __dirname+'/.env' }); //to start process from .env file
 
 const path = require('node:path');

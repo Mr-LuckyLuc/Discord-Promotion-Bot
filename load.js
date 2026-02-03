@@ -13,10 +13,23 @@ module.exports = {
 
         const client = interaction.client;
         const ranks = client.ranks;
-        const rankList = Object.fromEntries(Object.entries(ranks).map(([i, rank])=> {
-            return [rank.rank, i]
-        }));
+        const units = client.units;
+        const careers = client.careers;
         const members = await interaction.member.guild.members.fetch();
+
+        const rankList = Object.fromEntries(Object.entries(ranks).map(([i, rank])=> {
+            return [rank["rank role"], i]
+        }));
+        const unitList = Object.fromEntries(Object.entries(units).map(([i, unit])=> {
+            return [unit["extra role"]?unit["extra role"]:unit["unit role"], i]
+        }));
+        const careerList = Object.fromEntries(Object.entries(careers).map(([i, career])=> {
+            return [career["role"], i]
+        }));
+
+        console.log(rankList);
+        console.log(unitList);
+        console.log(careerList);
 
         const enlisted = {};
 
@@ -24,12 +37,47 @@ module.exports = {
             if (!member.user.bot) {
                 let enlistee = {};
 
-                const name = member.user.globalName
-                enlistee.nickname = (name.length>20 ? name.slice(0,20) : name);
-                enlistee.rank = "Private";
-                enlistee.unit = "4th Infantry Platoon";
-                enlistee.career = "Rifleman";
-                enlisted[member.id] =  enlistee;
+                enlistee.rank = Object.keys(ranks)[0];
+                enlistee.unit = Object.keys(units)[0];
+                enlistee.career = Object.keys(careers)[0];
+
+                if (member.id === interaction.guild.ownerId) enlistee.rank = Object.keys(ranks)[Object.keys(ranks).length - 1]
+
+                enlisted[member.id] = enlistee;
+
+                enlisted[member.user.id].nickname = member.nickname?member.nickname.slice(9):member.user.globalName.slice(0,25)
+
+                const roles = member.roles.cache;
+                
+                roles.forEach(role => {
+                    console.log(role.name)
+                    console.log(role.name in rankList)
+                    console.log(role.name in unitList)
+                    console.log(role.name in careerList)
+
+                    if (role.name in rankList) {
+                        Object.entries(rankList).forEach( ([i, rank]) => {
+                            if (i === role.name) {
+                                enlisted[member.user.id].rank = rank
+                                
+                            }
+                        })
+                    }
+                    if (role.name in unitList) {
+                        Object.entries(units).forEach( ([i, unit]) => {
+                            if (i === role.name) {
+                                enlisted[member.user.id].unit = unit
+                            }
+                        })
+                    }
+                    if (role.name in careerList) {
+                        Object.entries(careers).forEach( ([i, career]) => {
+                            if (i === role.name) {
+                                enlisted[member.user.id].career = career
+                            }
+                        })
+                    }
+                });
         
                 fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
                     if(err){
