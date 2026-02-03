@@ -41,7 +41,7 @@ module.exports = {
 
                 enlisted[member.id] = enlistee;
 
-                enlisted[member.user.id].nickname = member.nickname?member.nickname.slice(9):member.user.globalName.slice(0,25)
+                enlisted[member.user.id].nickname = member.nickname?member.nickname.slice(9).trim():member.user.globalName.slice(0,25).trim()
 
                 const roles = member.roles.cache;
                 

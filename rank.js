@@ -116,7 +116,7 @@ module.exports = {
                             const newExtra = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["extra role"]);
                             const staffPermissions = await interaction.guild.roles.cache.find(role => role.name === "Staff Permissions");
                             const I3 = await interaction.guild.roles.cache.find(role => role.name === "I3");
-                            const civ = await interaction.guild.roles.cache.find(role => role.name === "civ");
+                            const civ = await interaction.guild.roles.cache.find(role => role.name === "Civ");
                             
                             user.roles.remove(oldRank);
                             user.roles.add(newRank);
