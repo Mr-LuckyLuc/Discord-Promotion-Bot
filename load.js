@@ -70,15 +70,8 @@ module.exports = {
                     }
                 });
         
-                fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
-                    if(err){
-                        console.log(err);
-                    }else{
-                        console.log('person added');
-                    }
-                });
-        
                 client.enlisted = enlisted
+                console.log('person added');
             }
         }); 
 
