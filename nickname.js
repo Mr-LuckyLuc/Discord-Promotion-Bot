@@ -80,6 +80,9 @@ module.exports = {
                     content: `Changed <@${enlisteeId}>'s (${oldNickname}) nickname to ${nickname}.`,
                     components: [],
                 });
+            } else if (userConfirmation.customId === 'cancel') {
+                await interaction.editReply({ content: 'Cancelled', components: [] });
+                return;
             }
             
         } catch(err) {
