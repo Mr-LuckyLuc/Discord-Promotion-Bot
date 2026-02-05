@@ -77,7 +77,6 @@ module.exports = {
 
                 await user.setNickname(enlisted[enlisteeId].nickname)
 
-
                 userConfirmation.update({
                     content: `Discharged <@${enlisteeId}>.`,
                     components: [],
