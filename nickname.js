@@ -39,7 +39,7 @@ module.exports = {
             .addComponents(cancel);
             
         interaction.reply({
-            content: `Who do you want to promote?`,
+            content: `Who do you want to rename?`,
 			components: [userRow, cancelRow],
         });
 
@@ -77,7 +77,7 @@ module.exports = {
                 await user.setNickname(units[enlisted[enlisteeId].unit]["unit tag"] + ' ' + ranks[enlisted[enlisteeId].rank]["rank tag"] + ' ' + nickname)
                 
                 userConfirmation.update({
-                    content: `Changed <@${enlisteeId}> (${oldNickname})'s nickname to ${nickname}.`,
+                    content: `Changed <@${enlisteeId}>'s (${oldNickname}) nickname to ${nickname}.`,
                     components: [],
                 });
             }

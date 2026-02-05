@@ -12,6 +12,7 @@ module.exports = {
         const client = interaction.client;
         const ranks = client.ranks;
         const units = client.units;
+        const careers = client.careers;
         const enlisted = client.enlisted;
 
         const interacterId = interaction.member.user.id;
@@ -61,6 +62,7 @@ module.exports = {
                 const staffPermissions = interaction.guild.roles.cache.find(role => role.name === "Staff Permissions");
                 const oldUnit = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["unit role"]);
                 const oldUnitExtra = units[enlistee.unit]["extra role"]!==""?interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra role"]):undefined;
+                const oldCareer = interaction.guild.roles.cache.find(role => role.name === careers[enlistee.career]["role"]);
                 const I3 = interaction.guild.roles.cache.find(role => role.name === "I3");
                 const civ = interaction.guild.roles.cache.find(role => role.name === "Civ");
 
@@ -69,6 +71,7 @@ module.exports = {
                 user.roles.remove(staffPermissions);
                 user.roles.remove(oldUnit);
                 oldUnitExtra && user.roles.remove(oldUnitExtra);
+                user.roles.remove(oldCareer);
                 user.roles.remove(I3);
                 user.roles.add(civ);
 
