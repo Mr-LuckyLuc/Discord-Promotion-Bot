@@ -142,9 +142,6 @@ client.login(process.env.TOKEN);
 client.on('ready', async() => {
     const guild = client.guilds.cache.get(process.env.GUILDID)
 
-    console.log(enlisted)
-    console.log(Object.keys(enlisted).length === 0)
-
     if (Object.keys(enlisted).length === 0) {
         const members = await guild.members.fetch();
 

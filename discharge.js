@@ -76,7 +76,7 @@ module.exports = {
 
 
                 userConfirmation.update({
-                    content: `Discharged ${enlisted[enlisteeId].nickname}.`,
+                    content: `Discharged <@${enlisteeId}>.`,
                     components: [],
                 });
 

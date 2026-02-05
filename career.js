@@ -113,7 +113,7 @@ module.exports = {
                             user.roles.add(newCareer);
 
                             careerConfirmation.update({
-                                content: `Changed ${enlisted[enlisteeId].nickname}'s career to ${career}.`,
+                                content: `Changed <@${enlisteeId}>'s career to ${career}.`,
                                 components: [],
                             });
                         } catch(err) {

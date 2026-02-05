@@ -121,7 +121,7 @@ module.exports = {
                             await user.setNickname(units[unit]["unit tag"] + ' ' + ranks[enlisted[enlisteeId].rank]["rank tag"] + ' ' + enlisted[enlisteeId].nickname)
 
                             unitConfirmation.update({
-                                content: `Changed ${enlisted[enlisteeId].nickname}'s unit to ${unit}.`,
+                                content: `Changed <@${enlisteeId}>'s unit to ${unit}.`,
                                 components: [],
                             });
                         } catch(err) {
