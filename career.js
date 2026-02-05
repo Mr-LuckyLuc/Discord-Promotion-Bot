@@ -71,12 +71,17 @@ module.exports = {
                 const user = await interaction.guild.members.fetch(enlisteeId);
                 const enlistee = enlisted[enlisteeId];
 
-                const oldcareer = interaction.guild.roles.cache.find(role => role.name === careers[enlistee.career]["role"]);
-
                 if (enlisteeId == interaction.guild.ownerId) {
                     await userConfirmation.update({content: "No permission to change this soldier (server owner)", components: []});
                     return;
                 }
+                
+                if (user.user.bot) {
+                    await userConfirmation.update({content: "No permission to change this soldier (bot)", components: []});
+                    return;
+                }
+
+                const oldcareer = interaction.guild.roles.cache.find(role => role.name === careers[enlistee.career]["role"]);
 
                 userConfirmation.update({
                     content: `What career do you want to assign to?`,

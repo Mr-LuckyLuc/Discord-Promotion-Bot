@@ -54,14 +54,20 @@ module.exports = {
             if (userConfirmation.customId === 'user') {
                 const enlisteeId = userConfirmation.values[0];
                 const user = await interaction.guild.members.fetch(enlisteeId);
-                const enlistee = enlisted[enlisteeId];
-
-                const oldNickname = enlistee.nickname;
-
-                if (enlisteeId == interaction.member.guild.ownerId) {
+                
+                if (enlisteeId == interaction.guild.ownerId) {
                     await userConfirmation.update({content: "No permission to change this soldier (server owner)", components: []});
                     return;
                 }
+                
+                if (user.user.bot) {
+                    await userConfirmation.update({content: "No permission to change this soldier (bot)", components: []});
+                    return;
+                }
+
+                const enlistee = enlisted[enlisteeId];
+
+                const oldNickname = enlistee.nickname;
 
                 enlistee.nickname = nickname;
                 enlisted[enlisteeId] = enlistee;

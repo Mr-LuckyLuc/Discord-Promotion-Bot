@@ -48,13 +48,18 @@ module.exports = {
 
             if (userConfirmation.customId === 'user') {
                 const enlisteeId = userConfirmation.values[0];
-                
-                if (enlisteeId == interaction.member.guild.ownerId) {
-                    await interaction.reply({content: "No permission to change this soldier (server owner)", flags: MessageFlags.Ephemeral});
+                const user = await interaction.guild.members.fetch(enlisteeId);
+
+                if (enlisteeId == interaction.guild.ownerId) {
+                    await userConfirmation.update({content: "No permission to change this soldier (server owner)", components: []});
                     return;
                 }
-
-                const user = await interaction.guild.members.fetch(enlisteeId);
+                
+                if (user.user.bot) {
+                    await userConfirmation.update({content: "No permission to change this soldier (bot)", components: []});
+                    return;
+                }
+                
                 const enlistee = enlisted[enlisteeId];
 
                 const oldRank = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["rank role"]);

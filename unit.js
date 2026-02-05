@@ -70,15 +70,21 @@ module.exports = {
             if (userConfirmation.customId === 'user') {
                 const enlisteeId = userConfirmation.values[0];
                 const user = await interaction.guild.members.fetch(enlisteeId);
-                const enlistee = enlisted[enlisteeId];
-
-                const oldUnit = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["unit role"]);
-                const oldExtra = units[enlistee.unit]["extra role"]!=="" ? interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra role"]) : undefined;
 
                 if (enlisteeId == interaction.guild.ownerId) {
                     await userConfirmation.update({content: "No permission to change this soldier (server owner)", components: []});
                     return;
                 }
+                
+                if (user.user.bot) {
+                    await userConfirmation.update({content: "No permission to change this soldier (bot)", components: []});
+                    return;
+                }
+
+                const enlistee = enlisted[enlisteeId];
+
+                const oldUnit = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["unit role"]);
+                const oldExtra = units[enlistee.unit]["extra role"]!=="" ? interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra role"]) : undefined;
 
                 userConfirmation.update({
                     content: `What unit do you want to transfer to?`,
