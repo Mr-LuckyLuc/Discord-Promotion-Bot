@@ -54,7 +54,7 @@ module.exports = {
         // messages -------------------------------
 
         interaction.reply({
-            content: `Who do you want to promote?`,
+            content: `Who do you want to assign?`,
 			components: [userRow, cancelRow],
         });
 

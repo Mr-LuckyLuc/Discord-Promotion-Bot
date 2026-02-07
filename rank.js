@@ -124,10 +124,14 @@ module.exports = {
                                     console.log('rank changed');
                                 }
                             });
+
+                            console.log(rank)
+                            console.log(ranks[rank])
+                            console.log(ranks[rank]["staff permissions"])
                             
                             const newRank = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["rank role"]);
                             const newExtra = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["extra role"]);
-                            const staffPermissions = await ranks[rank]["staff permissions"]!=="" ? interaction.guild.roles.cache.find(role => role.name === rank[rank]["staff permissions"]) : undefined;
+                            const staffPermissions = await ranks[rank]["staff permissions"]!=="" ? interaction.guild.roles.cache.find(role => role.name === ranks[rank]["staff permissions"]) : undefined;
                             const K3 = await interaction.guild.roles.cache.find(role => role.name === "K3");
                             const civ = await interaction.guild.roles.cache.find(role => role.name === "Civ");
                             

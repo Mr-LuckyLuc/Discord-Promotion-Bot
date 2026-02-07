@@ -51,7 +51,7 @@ module.exports = {
     // messages -------------------------------
 
         interaction.reply({
-            content: `Who do you want to promote?`,
+            content: `Who do you want to award?`,
 			components: [userRow, cancelRow],
         });
 
@@ -70,7 +70,7 @@ module.exports = {
                 }
 
                 userConfirmation.update({
-                    content: `What rank do you want to promote to?`,
+                    content: `What award do you want to give?`,
                     components: [awardRow, cancelRow],
                 })
 

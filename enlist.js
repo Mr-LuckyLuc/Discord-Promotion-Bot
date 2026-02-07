@@ -62,7 +62,7 @@ module.exports = {
 
                 const rank = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["rank role"]);
                 const rankExtra = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["extra role"]);
-                const staffPermissions = ranks[enlistee.rank]["staff permissions"]!=="" ? interaction.guild.roles.cache.find(role => role.name === rank[enlistee.rank]["staff permissions"]) : undefined;
+                const staffPermissions = ranks[enlistee.rank]["staff permissions"]!=="" ? interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["staff permissions"]) : undefined;
                 const unit = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["unit role"]);
                 const unitExtra = units[enlistee.unit]["extra role"]!=="" ? interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra role"]) : undefined;
                 const career = interaction.guild.roles.cache.find(role => role.name === careers[enlistee.career]["role"]);
