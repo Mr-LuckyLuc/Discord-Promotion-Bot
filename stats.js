@@ -23,10 +23,7 @@ module.exports = {
 
         const reformatted = Object.entries(enlisted).map(arr => {arr[1].id = arr[0]; return arr[1]})
         
-        const platoon = reformatted.filter(enlistee => enlistee.unit === unit);
-        const companyLeader = platoon.filter(enlistee => companyLeaderFilter.includes(enlistee.rank))
-        const platoonLeader = platoon.filter(enlistee => platoonLeaderFilter.includes(enlistee.rank))
-        const platoonStaff = platoon.filter(enlistee => platoonStaffFilter.includes(enlistee.rank))
+        const companyLeader = reformatted.filter(enlistee => companyLeaderFilter.includes(enlistee.rank))
         const rest = platoon.filter(enlistee => !companyLeaderFilter.includes(enlistee.rank) && !platoonLeaderFilter.includes(enlistee.rank) && !platoonStaffFilter.includes(enlistee.rank))
 
         for (const filter of companyLeaderFilter) {
@@ -37,7 +34,10 @@ module.exports = {
 
         for (const unit of Object.keys(units).filter(unit => !seperatedUnits.includes(unit))) {
             message += `## ${unit}\n`
-
+            
+            const platoon = reformatted.filter(enlistee => enlistee.unit === unit);
+            const platoonLeader = platoon.filter(enlistee => platoonLeaderFilter.includes(enlistee.rank))
+            const platoonStaff = platoon.filter(enlistee => platoonStaffFilter.includes(enlistee.rank))
             
             for (const filter of platoonLeaderFilter) {
                 for (const person of platoonLeader.filter(enlistee => enlistee.rank === filter)) {
