@@ -13,21 +13,31 @@ module.exports = {
         const units = client.units;
         const careers = client.careers;
         
-        const companyLeaderFilter = ["Captain", "First Sergeant"]
+        const companyLeaderFilter = ["Captain"]
+        const companyStaffFilter = ["First Sergeant"]
         const platoonLeaderFilter = ["Lieutenant"]
         const platoonStaffFilter = ["Sergeant", "Corporal"]
         const seperatedUnits = ["Motala Helicopter Squadron, 1st", "Motala Helicopter Squadron, 2nd"]
         const seperatedCareers = ["Aircrew Specialist"]
 
-        let message = "# 1st Company of Light Cavalry \n"
+        let message = "# 1st Light Cavalry Company \n"
+        message += "__**Order of Battle**__ \n"
 
         const reformatted = Object.entries(enlisted).map(arr => {arr[1].id = arr[0]; return arr[1]})
         
         const companyLeader = reformatted.filter(enlistee => companyLeaderFilter.includes(enlistee.rank))
+        const companyStaff = reformatted.filter(enlistee => companyLeaderFilter.includes(enlistee.rank) || enlistee.id === 540576751005466637) //juck hardcoded
 
         for (const filter of companyLeaderFilter) {
             for (const person of companyLeader.filter(enlistee => enlistee.rank === filter)) {
-                message += `### Company C.O: <@${person.id}> \n`
+                message += `**Company C.O: **<@${person.id}> \n`
+            }
+        }
+
+        message += "**Company Staff** \n"
+        for (const filter of platoonStaffFilter) {
+            for (const person of platoonStaff.filter(enlistee => enlistee.rank === filter)) {
+                message += `<@${person.id}> \n`
             }
         }
 
@@ -41,11 +51,11 @@ module.exports = {
             
             for (const filter of platoonLeaderFilter) {
                 for (const person of platoonLeader.filter(enlistee => enlistee.rank === filter)) {
-                    message += `### Platoon C.O: <@${person.id}> \n`
+                    message += `**Platoon C.O:** <@${person.id}> \n`
                 }
             }
 
-            message += "## Platoon Staff \n"
+            message += "**Platoon Staff** \n"
             for (const filter of platoonStaffFilter) {
                 for (const person of platoonStaff.filter(enlistee => enlistee.rank === filter)) {
                     message += `<@${person.id}> \n`
