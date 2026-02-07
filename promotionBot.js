@@ -103,9 +103,9 @@ client.on('guildMemberAdd', member => {
     if (!(member.id in enlisted)) {
         const name = member.user.globalName
         enlistee.nickname = (name.length>20 ? name.slice(0,20) : name);
-        enlistee.rank = rank[0];
-        enlistee.unit = unit[0];
-        enlistee.career = career[0];
+        enlistee.rank = ranks[0];
+        enlistee.unit = units[0];
+        enlistee.career = careers[0];
         enlisted[member.id] =  enlistee;
 
         fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
@@ -117,8 +117,6 @@ client.on('guildMemberAdd', member => {
         });
 
         client.enlisted = enlisted
-    } else {
-        member.setNickname(units[enlisted[enlisteeId].unit]["unit tag"] + ' ' + ranks[rank]["rank tag"] + ' ' + enlisted[enlisteeId].nickname);
     }
 });
 
