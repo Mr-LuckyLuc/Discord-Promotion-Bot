@@ -79,7 +79,7 @@ module.exports = {
         for (const unit of Object.keys(units).filter(unit => seperatedUnits.includes(unit))) {
             message += `## ${unit}\n`
 
-            const platoon = reformatted.filter(enlistee => enlistee.unit === unit);
+            const platoon = reformatted.filter(enlistee => enlistee.unit === unit && !enlistee.id === me);
 
             for (const career of Object.keys(careers).filter(career => seperatedCareers.includes(career))) {
                 people = platoon.filter(enlistee => enlistee.career===career)
