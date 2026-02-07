@@ -13,7 +13,7 @@ module.exports = {
         const units = client.units;
         const careers = client.careers;
         
-        const me = 540576751005466637
+        const me = "540576751005466637"
         const companyLeaderFilter = ["Captain"]
         const companyStaffFilter = ["First Sergeant"]
         const platoonLeaderFilter = ["Lieutenant"]
