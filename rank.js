@@ -115,6 +115,7 @@ module.exports = {
                         try{
 
                             enlistee.rank = rank;
+                            enlistee.active = true;
                             enlisted[enlisteeId] = enlistee;
                     
                             fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {

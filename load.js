@@ -68,6 +68,12 @@ module.exports = {
                             }
                         })
                     }
+                    if ("K3" === role.name) {
+                        enlisted[member.user.id].active = true
+                    } else {
+                        enlisted[member.user.id].active = false
+                    }
+
                 });
         
                 client.enlisted = enlisted

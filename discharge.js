@@ -59,8 +59,17 @@ module.exports = {
                 }
                 
                 const enlistee = enlisted[enlisteeId];
-
-                console.log('discharged');
+                
+                enlistee.active = false;
+                enlisted[enlisteeId] = enlistee;
+        
+                fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
+                    if(err){
+                        console.log(err);
+                    }else{
+                        console.log('discharged');
+                    }
+                });
 
                 const oldRank = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["rank role"]);
                 const oldRankExtra = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["extra role"]);
