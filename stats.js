@@ -27,7 +27,7 @@ module.exports = {
         const reformatted = Object.entries(enlisted).map(arr => {arr[1].id = arr[0]; return arr[1]})
         
         const companyLeader = reformatted.filter(enlistee => companyLeaderFilter.includes(enlistee.rank))
-        const companyStaff = reformatted.filter(enlistee => companyLeaderFilter.includes(enlistee.rank) && !enlistee.id === me) //juck hardcoded
+        const companyStaff = reformatted.filter(enlistee => companyLeaderFilter.includes(enlistee.rank)) //juck hardcoded
 
         for (const filter of companyLeaderFilter) {
             for (const person of companyLeader.filter(enlistee => enlistee.rank === filter)) {
@@ -46,7 +46,7 @@ module.exports = {
         for (const unit of Object.keys(units).filter(unit => !seperatedUnits.includes(unit))) {
             message += `## ${unit}\n`
             
-            const platoon = reformatted.filter(enlistee => enlistee.unit === unit);
+            const platoon = reformatted.filter(enlistee => enlistee.unit === unit && !(enlistee.id === me));
             const platoonLeader = platoon.filter(enlistee => platoonLeaderFilter.includes(enlistee.rank))
             const platoonStaff = platoon.filter(enlistee => platoonStaffFilter.includes(enlistee.rank))
             const rest = platoon.filter(enlistee => !companyLeaderFilter.includes(enlistee.rank) && !platoonLeaderFilter.includes(enlistee.rank) && !platoonStaffFilter.includes(enlistee.rank))
@@ -79,7 +79,7 @@ module.exports = {
         for (const unit of Object.keys(units).filter(unit => seperatedUnits.includes(unit))) {
             message += `## ${unit}\n`
 
-            const platoon = reformatted.filter(enlistee => enlistee.unit === unit && !enlistee.id === me);
+            const platoon = reformatted.filter(enlistee => enlistee.unit === unit && !(enlistee.id === me));
 
             for (const career of Object.keys(careers).filter(career => seperatedCareers.includes(career))) {
                 people = platoon.filter(enlistee => enlistee.career===career)
@@ -87,6 +87,7 @@ module.exports = {
                 message += `### ${career}: ${people.length}\n`;
 
                 for (person of people) {
+                    console.log(person.id)
                     message += `- <@${person.id}> \n`
                 }
             }
