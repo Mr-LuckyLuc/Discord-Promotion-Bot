@@ -13,6 +13,7 @@ module.exports = {
         const units = client.units;
         const careers = client.careers;
         
+        const me = 540576751005466637
         const companyLeaderFilter = ["Captain"]
         const companyStaffFilter = ["First Sergeant"]
         const platoonLeaderFilter = ["Lieutenant"]
@@ -35,8 +36,9 @@ module.exports = {
         }
 
         message += "**Company Staff** \n"
-        for (const filter of platoonStaffFilter) {
-            for (const person of platoonStaff.filter(enlistee => enlistee.rank === filter)) {
+        message += `<@${me}> \n`
+        for (const filter of companyStaffFilter) {
+            for (const person of companyStaff.filter(enlistee => enlistee.rank === filter)) {
                 message += `<@${person.id}> \n`
             }
         }
