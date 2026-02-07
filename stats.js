@@ -13,7 +13,7 @@ module.exports = {
         const units = client.units;
         const careers = client.careers;
         
-        const me = {id: 540576751005466637}
+        const me = 540576751005466637
         const companyLeaderFilter = ["Captain"]
         const companyStaffFilter = ["First Sergeant"]
         const platoonLeaderFilter = ["Lieutenant"]
@@ -27,7 +27,7 @@ module.exports = {
         const reformatted = Object.entries(enlisted).map(arr => {arr[1].id = arr[0]; return arr[1]})
         
         const companyLeader = reformatted.filter(enlistee => companyLeaderFilter.includes(enlistee.rank))
-        const companyStaff = reformatted.filter(enlistee => companyLeaderFilter.includes(enlistee.rank) && !enlistee.id === me.id) //juck hardcoded
+        const companyStaff = reformatted.filter(enlistee => companyLeaderFilter.includes(enlistee.rank) && !enlistee.id === me) //juck hardcoded
 
         for (const filter of companyLeaderFilter) {
             for (const person of companyLeader.filter(enlistee => enlistee.rank === filter)) {
@@ -36,7 +36,7 @@ module.exports = {
         }
 
         message += "**Company Staff** \n"
-        message += `<@${me.id}> \n`
+        message += `<@${me}> \n`
         for (const filter of companyStaffFilter) {
             for (const person of companyStaff.filter(enlistee => enlistee.rank === filter)) {
                 message += `<@${person.id}> \n`
@@ -79,7 +79,7 @@ module.exports = {
         for (const unit of Object.keys(units).filter(unit => seperatedUnits.includes(unit))) {
             message += `## ${unit}\n`
 
-            const platoon = reformatted.filter(enlistee => enlistee.unit === unit && !enlistee.id === me.id);
+            const platoon = reformatted.filter(enlistee => enlistee.unit === unit);
 
             for (const career of Object.keys(careers).filter(career => seperatedCareers.includes(career))) {
                 people = platoon.filter(enlistee => enlistee.career===career)
