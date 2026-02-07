@@ -127,19 +127,19 @@ module.exports = {
                             
                             const newRank = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["rank role"]);
                             const newExtra = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["extra role"]);
-                            const staffPermissions = await interaction.guild.roles.cache.find(role => role.name === "Staff Permissions");
-                            const I3 = await interaction.guild.roles.cache.find(role => role.name === "I3");
+                            const staffPermissions = await ranks[rank]["staff permissions"]!=="" ? interaction.guild.roles.cache.find(role => role.name === rank[rank]["staff permissions"]) : undefined;
+                            const K3 = await interaction.guild.roles.cache.find(role => role.name === "K3");
                             const civ = await interaction.guild.roles.cache.find(role => role.name === "Civ");
                             
                             user.roles.remove(oldRank);
                             user.roles.add(newRank);
 
-                            if (ranks[rank]["staff permissions"]) {user.roles.add(staffPermissions)} else {user.roles.remove(staffPermissions)}
+                            staffPermissions && user.roles.add(staffPermissions);
 
                             user.roles.remove(oldExtra);
                             user.roles.add(newExtra);
 
-                            user.roles.add(I3);
+                            user.roles.add(K3);
                             user.roles.remove(civ);
 
                             await user.setNickname(units[enlisted[enlisteeId].unit]["unit tag"] + ' ' + ranks[rank]["rank tag"] + ' ' + enlisted[enlisteeId].nickname)

@@ -1,7 +1,5 @@
 const {ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, UserSelectMenuBuilder} = require('discord.js');
 
-const fs = require('node:fs');
-
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('discharge')
@@ -64,20 +62,20 @@ module.exports = {
 
                 const oldRank = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["rank role"]);
                 const oldRankExtra = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["extra role"]);
-                const staffPermissions = interaction.guild.roles.cache.find(role => role.name === "Staff Permissions");
+                const staffPermissions = ranks[enlistee.rank]["staff permissions"]!=="" ? interaction.guild.roles.cache.find(role => role.name === rank[enlistee.rank]["staff permissions"]) : undefined;
                 const oldUnit = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["unit role"]);
-                const oldUnitExtra = units[enlistee.unit]["extra role"]!==""?interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra role"]):undefined;
+                const oldUnitExtra = units[enlistee.unit]["extra role"]!=="" ? interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra role"]) : undefined;
                 const oldCareer = interaction.guild.roles.cache.find(role => role.name === careers[enlistee.career]["role"]);
-                const I3 = interaction.guild.roles.cache.find(role => role.name === "I3");
+                const K3 = interaction.guild.roles.cache.find(role => role.name === "K3");
                 const civ = interaction.guild.roles.cache.find(role => role.name === "Civ");
 
                 user.roles.remove(oldRank);
                 user.roles.remove(oldRankExtra);
-                user.roles.remove(staffPermissions);
+                staffPermissions && user.roles.remove(staffPermissions);
                 user.roles.remove(oldUnit);
                 oldUnitExtra && user.roles.remove(oldUnitExtra);
                 user.roles.remove(oldCareer);
-                user.roles.remove(I3);
+                user.roles.remove(K3);
                 user.roles.add(civ);
 
                 await user.setNickname(enlisted[enlisteeId].nickname)

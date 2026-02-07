@@ -3,37 +3,37 @@
         "rank tag": "PVT.",
         "rank role": "Private",
         "extra role": "Enlisted",
-        "staff permissions": false
+        "staff permissions": ""
     },
     "Private First Class": {
         "rank tag": "PFC.",
         "rank role": "Private First Class",
         "extra role": "Enlisted",
-        "staff permissions": false
+        "staff permissions": ""
     },
     "Lance Corporal": {
         "rank tag": "LCPL.",
         "rank role": "Lance Corporal",
         "extra role": "Enlisted",
-        "staff permissions": false
+        "staff permissions": ""
     },
     "Corporal": {
         "rank tag": "CPL.",
         "rank role": "Corporal",
         "extra role": "Enlisted",
-        "staff permissions": true
+        "staff permissions": "Junior Staff Perms"
     },
     "Sergeant": {
         "rank tag": "SGT.",
         "rank role": "Sergeant",
         "extra role": "Enlisted",
-        "staff permissions": true
+        "staff permissions": "Junior Staff Perms"
     },
     "First Sergeant": {
         "rank tag": "1SGT.",
         "rank role": "First Sergeant",
         "extra role": "Enlisted",
-        "staff permissions": true
+        "staff permissions": "Senior Staff Perms"
     },
     "Warrant Officer Cadet": {
         "rank tag": "WOC.",
@@ -51,18 +51,18 @@
         "rank tag": "LT.",
         "rank role": "First Sergeant",
         "extra role": "Officer",
-        "staff permissions": true
+        "staff permissions": "Senior Staff Perms"
     },
     "Captain": {
         "rank tag": "CPT.",
         "rank role": "Captain",
         "extra role": "Officer",
-        "staff permissions": true
+        "staff permissions": "Senior Staff Perms"
     },
     "Major": {
         "rank tag": "MAJ.",
         "rank role": "Major",
         "extra role": "Officer",
-        "staff permissions": true
+        "staff permissions": "Senior Staff Perms"
     }
 }
