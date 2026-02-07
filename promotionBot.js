@@ -194,16 +194,14 @@ client.on('ready', async() => {
                     }
                     if ("K3" === role.name) {
                         enlisted[member.user.id].active = true
-                    } else {
-                        enlisted[member.user.id].active = false
                     }
                 });
         
-                client.enlisted = enlisted;
                 console.log('person added');
             }
         }); 
 
+        client.enlisted = enlisted;
         console.log(enlisted);
 
         fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {

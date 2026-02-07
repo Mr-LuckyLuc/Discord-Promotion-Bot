@@ -36,6 +36,7 @@ module.exports = {
                 enlistee.rank = Object.keys(ranks)[0];
                 enlistee.unit = Object.keys(units)[0];
                 enlistee.career = Object.keys(careers)[0];
+                enlistee.active = false;
 
                 if (member.id === interaction.guild.ownerId) enlistee.rank = Object.keys(ranks)[Object.keys(ranks).length - 1]
 
@@ -44,6 +45,7 @@ module.exports = {
                 enlisted[member.user.id].nickname = member.nickname?member.nickname.slice(9).trim():member.user.globalName.slice(0,25).trim()
 
                 const roles = member.roles.cache;
+                console.log(member.nickname);
                 
                 roles.forEach(role => {
 
@@ -69,18 +71,17 @@ module.exports = {
                         })
                     }
                     if ("K3" === role.name) {
+                        console.log(role.name)
                         enlisted[member.user.id].active = true
-                    } else {
-                        enlisted[member.user.id].active = false
                     }
 
                 });
         
-                client.enlisted = enlisted
                 console.log('person added');
             }
         }); 
 
+        client.enlisted = enlisted
         console.log(enlisted);
 
         fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
