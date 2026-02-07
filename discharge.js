@@ -60,6 +60,8 @@ module.exports = {
                 
                 const enlistee = enlisted[enlisteeId];
 
+                console.log('discharged');
+
                 const oldRank = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["rank role"]);
                 const oldRankExtra = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["extra role"]);
                 const staffPermissions = ranks[enlistee.rank]["staff permissions"]!=="" ? interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["staff permissions"]) : undefined;

@@ -21,19 +21,19 @@
         "rank tag": "CPL.",
         "rank role": "Corporal",
         "extra role": "Enlisted",
-        "staff permissions": "Junior Staff Perms"
+        "staff permissions": "Junior Staff Permissions"
     },
     "Sergeant": {
         "rank tag": "SGT.",
         "rank role": "Sergeant",
         "extra role": "Enlisted",
-        "staff permissions": "Junior Staff Perms"
+        "staff permissions": "Junior Staff Permissions"
     },
     "First Sergeant": {
         "rank tag": "1SGT.",
         "rank role": "First Sergeant",
         "extra role": "Enlisted",
-        "staff permissions": "Senior Staff Perms"
+        "staff permissions": "Senior Staff Permissions"
     },
     "Warrant Officer Cadet": {
         "rank tag": "WOC.",
@@ -49,20 +49,20 @@
     },
     "Lieutenant": {
         "rank tag": "LT.",
-        "rank role": "First Sergeant",
+        "rank role": "Lieutenant",
         "extra role": "Officer",
-        "staff permissions": "Senior Staff Perms"
+        "staff permissions": "Senior Staff Permissions"
     },
     "Captain": {
         "rank tag": "CPT.",
         "rank role": "Captain",
         "extra role": "Officer",
-        "staff permissions": "Senior Staff Perms"
+        "staff permissions": "Senior Staff Permissions"
     },
     "Major": {
         "rank tag": "MAJ.",
         "rank role": "Major",
         "extra role": "Officer",
-        "staff permissions": "Senior Staff Perms"
+        "staff permissions": "Senior Staff Permissions"
     }
 }

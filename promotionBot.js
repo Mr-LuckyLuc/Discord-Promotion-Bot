@@ -117,9 +117,9 @@ client.on('guildMemberAdd', member => {
         });
 
         client.enlisted = enlisted
+    } else {
+        member.setNickname(units[enlisted[enlisteeId].unit]["unit tag"] + ' ' + ranks[rank]["rank tag"] + ' ' + enlisted[enlisteeId].nickname);
     }
-    
-    member.setNickname(ranks[enlistee.rank].name + ' ' + enlistee.nickname);
 });
 
 client.on(Events.InteractionCreate, (interaction) => {

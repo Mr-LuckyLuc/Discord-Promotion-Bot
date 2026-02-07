@@ -13,32 +13,49 @@ module.exports = {
         const units = client.units;
         const careers = client.careers;
         
-        const filters = ["Sergeant", "Corporal"]
-        const exludedUnits = ["Motala Helicopter Squadron, 1st", "Motala Helicopter Squadron, 2nd"]
-        const exludedCareers = ["Aircrew Specialist"]
+        const companyLeaderFilter = ["Captain", "First Sergeant"]
+        const platoonLeaderFilter = ["Lieutenant"]
+        const platoonStaffFilter = ["Sergeant", "Corporal"]
+        const seperatedUnits = ["Motala Helicopter Squadron, 1st", "Motala Helicopter Squadron, 2nd"]
+        const seperatedCareers = ["Aircrew Specialist"]
 
-        let message = ""
+        let message = "# 1st Company of Light Cavalry \n"
 
         const reformatted = Object.entries(enlisted).map(arr => {arr[1].id = arr[0]; return arr[1]})
+        
+        const platoon = reformatted.filter(enlistee => enlistee.unit === unit);
+        const companyLeader = platoon.filter(enlistee => companyLeaderFilter.includes(enlistee.rank))
+        const platoonLeader = platoon.filter(enlistee => platoonLeaderFilter.includes(enlistee.rank))
+        const platoonStaff = platoon.filter(enlistee => platoonStaffFilter.includes(enlistee.rank))
+        const rest = platoon.filter(enlistee => !companyLeaderFilter.includes(enlistee.rank) && !platoonLeaderFilter.includes(enlistee.rank) && !platoonStaffFilter.includes(enlistee.rank))
 
-        for (const unit of Object.keys(units).filter(unit => !exludedUnits.includes(unit))) {
-            message += `# ${unit}\n`
+        for (const filter of companyLeaderFilter) {
+            for (const person of companyLeader.filter(enlistee => enlistee.rank === filter)) {
+                message += `### Company C.O: <@${person.id}> \n`
+            }
+        }
 
-            const platoon = reformatted.filter(enlistee => enlistee.unit === unit);
-            const ncos = platoon.filter(enlistee => filters.includes(enlistee.rank))
-            const rest = platoon.filter(enlistee => !filters.includes(enlistee.rank))
+        for (const unit of Object.keys(units).filter(unit => !seperatedUnits.includes(unit))) {
+            message += `## ${unit}\n`
 
-            message += "## Non-Commissioned Officers \n"
-            for (const filter of filters) {
-                for (const person of ncos.filter(enlistee => enlistee.rank === filter)) {
+            
+            for (const filter of platoonLeaderFilter) {
+                for (const person of platoonLeader.filter(enlistee => enlistee.rank === filter)) {
+                    message += `### Platoon C.O: <@${person.id}> \n`
+                }
+            }
+
+            message += "## Platoon Staff \n"
+            for (const filter of platoonStaffFilter) {
+                for (const person of platoonStaff.filter(enlistee => enlistee.rank === filter)) {
                     message += `<@${person.id}> \n`
                 }
             }
 
-            for (const career of Object.keys(careers).filter(career => !exludedCareers.includes(career))) {
+            for (const career of Object.keys(careers).filter(career => !seperatedCareers.includes(career))) {
                 people = rest.filter(enlistee => enlistee.career===career)
 
-                message += `## ${career}: ${people.length}\n`;
+                message += `### ${career}: ${people.length}\n`;
 
                 for (person of people) {
                     message += `- <@${person.id}> \n`
@@ -47,35 +64,22 @@ module.exports = {
 
         }
 
+        for (const unit of Object.keys(units).filter(unit => seperatedUnits.includes(unit))) {
+            message += `## ${unit}\n`
 
-        // const grouped = {}
+            const platoon = reformatted.filter(enlistee => enlistee.unit === unit);
 
-        // for (const unit of Object.keys(units)) {
-        //     grouped[unit] = Object.values(enlisted).filter(enlistee => enlistee.unit==unit)
-        // }
+            for (const career of Object.keys(careers).filter(career => seperatedCareers.includes(career))) {
+                people = platoon.filter(enlistee => enlistee.career===career)
 
-        // console.log(grouped);
+                message += `### ${career}: ${people.length}\n`;
 
-        // let message = ""
+                for (person of people) {
+                    message += `- <@${person.id}> \n`
+                }
+            }
 
-        // for (const [name, list] of Object.entries(grouped)) {
-        //     message += `\n\n${name}:`
-        //     for (const rank of Object.keys(ranks)) {
-        //         const amount = Object.values(list).filter(enlistee => enlistee.career==c=areeer);
-        //         if (amount) message += `\n- ${rank}: ${amount}`
-        //     }
-        // }
-
-// message = `Sergeants ${Object.values(enlisted).filter(enlistee => enlistee.rank=="Sergeant").length}/x\n \
-// Corporals x/x\n \
-// \n \
-// Riflemen x/x\n \
-// Marksmen x/x\n \
-// \n \
-// Personnel x/x\n \
-// \n \
-// Unit Y\n \
-// Aircrew specailists x/x\n`
+        }
 
         interaction.reply({ content: message, flags: MessageFlags.Ephemeral }); 
 		

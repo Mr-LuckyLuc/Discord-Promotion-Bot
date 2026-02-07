@@ -124,10 +124,6 @@ module.exports = {
                                     console.log('rank changed');
                                 }
                             });
-
-                            console.log(rank)
-                            console.log(ranks[rank])
-                            console.log(ranks[rank]["staff permissions"])
                             
                             const newRank = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["rank role"]);
                             const newExtra = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["extra role"]);
