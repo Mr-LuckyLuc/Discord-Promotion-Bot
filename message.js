@@ -83,7 +83,7 @@ export default function updateMessage(client) {
 
             for (const rank of rankList) {
                 const people = group.filter(enlistee => enlistee.rank===rank)
-                for (person of people) {
+                for (const person of people) {
                     message += `- <@${person.id}> \n`
                 }
             }

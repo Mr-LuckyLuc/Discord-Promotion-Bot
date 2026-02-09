@@ -120,6 +120,23 @@ client.on('guildMemberAdd', member => {
     }
 });
 
+client.on('guildMemberRemove', member => {
+                
+    const enlistee = enlisted[member.id];
+    
+    enlistee.active = false;
+    enlisted[member.id] = enlistee;
+
+    fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
+        if(err){
+            console.log(err);
+        }else{
+            console.log('discharged');
+        }
+    });
+
+});
+
 client.on(Events.InteractionCreate, (interaction) => {
     
     if (interaction.isChatInputCommand()) {
