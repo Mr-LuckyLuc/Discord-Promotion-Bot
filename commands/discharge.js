@@ -1,4 +1,5 @@
 const {ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, UserSelectMenuBuilder} = require('discord.js');
+const { default: updateMessage } = require('../message');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -90,6 +91,8 @@ module.exports = {
                 user.roles.add(civ);
 
                 await user.setNickname(enlisted[enlisteeId].nickname)
+
+                updateMessage(client);
 
                 userConfirmation.update({
                     content: `Discharged <@${enlisteeId}>.`,

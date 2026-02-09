@@ -1,23 +1,20 @@
 const {StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, UserSelectMenuBuilder} = require('discord.js');
-const { log } = require('node:console');
 
 const fs = require('node:fs');
+const { default: updateMessage } = require('../message');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('rank')
-		.setDescription('Promote somebody!'),
+		.setName('career')
+		.setDescription('assign somebody to a career!'),
         
 	async execute(interaction) {
         const client = interaction.client;
-        const ranks = client.ranks;
-        const units = client.units;
+        const careers = client.careers;
         const enlisted = client.enlisted;
 
         const interacterId = interaction.member.user.id;
-        const promoterRank = enlisted[interacterId].rank;
-        let underranked = false;
-
+        
         // User ----------------
 
         const userSelect = new UserSelectMenuBuilder()
@@ -27,31 +24,24 @@ module.exports = {
         const userRow = new ActionRowBuilder()
         .addComponents(userSelect)
 		
-        // Rank ----------------
+        // career ----------------
 
-        const rankSelect = new StringSelectMenuBuilder()
-			.setCustomId('rank')
+        const careerSelect = new StringSelectMenuBuilder()
+			.setCustomId('career')
 			.setPlaceholder('Make a selection!');
         
-		for (const [rank, _] of Object.entries(ranks)) {
+		for (const [career, _] of Object.entries(careers)) {
 
-            if ((rank === promoterRank) || (underranked))  {
-                underranked = true;
-                continue;
-            }
-
-            
-
-            rankSelect.addOptions(
+            careerSelect.addOptions(
 				new StringSelectMenuOptionBuilder()
-					.setLabel(rank)
-					.setDescription('Promote the person to ' + rank )
-					.setValue(rank)
+					.setLabel(career)
+					.setDescription('Assign the person to ' + career )
+					.setValue(career)
             )
         }
 
-		const rankRow = new ActionRowBuilder()
-			.addComponents(rankSelect);
+		const careerRow = new ActionRowBuilder()
+			.addComponents(careerSelect);
 
 
 		const cancel = new ButtonBuilder()
@@ -62,10 +52,10 @@ module.exports = {
 		const cancelRow = new ActionRowBuilder()
 			.addComponents(cancel);
 
-    // messages -------------------------------
+        // messages -------------------------------
 
         interaction.reply({
-            content: `Who do you want to promote?`,
+            content: `Who do you want to assign?`,
 			components: [userRow, cancelRow],
         });
 
@@ -80,6 +70,7 @@ module.exports = {
             if (userConfirmation.customId === 'user') {
                 const enlisteeId = userConfirmation.values[0];
                 const user = await interaction.guild.members.fetch(enlisteeId);
+                const enlistee = enlisted[enlisteeId];
 
                 if (enlisteeId == interaction.guild.ownerId) {
                     await userConfirmation.update({content: "No permission to change this soldier (server owner)", components: []});
@@ -91,62 +82,46 @@ module.exports = {
                     return;
                 }
 
-                const enlistee = enlisted[enlisteeId];
-
-                const oldRank = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["rank role"]);
-                const oldExtra = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["extra role"]);
-
+                const oldcareer = interaction.guild.roles.cache.find(role => role.name === careers[enlistee.career]["role"]);
 
                 userConfirmation.update({
-                    content: `What rank do you want to promote to?`,
-                    components: [rankRow, cancelRow],
+                    content: `What career do you want to assign to?`,
+                    components: [careerRow, cancelRow],
                 })
 
                 try {
                     const reply = await interaction.fetchReply();
 
-                    let rankConfirmation = {member: {id: 0}}
+                    let careerConfirmation = {member: {id: 0}}
 
-                    while (rankConfirmation.member.id !== interacterId) rankConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
+                    while (careerConfirmation.member.id !== interacterId) careerConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
+
                     
-                    if (rankConfirmation.customId === 'rank') {
-                        const rank = rankConfirmation.values[0];
+                    if (careerConfirmation.customId === 'career') {
+                        const career = careerConfirmation.values[0];
 
                         try{
 
-                            enlistee.rank = rank;
-                            enlistee.active = true;
+                            enlistee.career = career;
                             enlisted[enlisteeId] = enlistee;
                     
                             fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
                                 if(err){
                                     console.log(err);
                                 }else{
-                                    console.log('rank changed');
+                                    console.log('career changed');
                                 }
                             });
                             
-                            const newRank = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["rank role"]);
-                            const newExtra = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["extra role"]);
-                            const staffPermissions = await ranks[rank]["staff permissions"]!=="" ? interaction.guild.roles.cache.find(role => role.name === ranks[rank]["staff permissions"]) : undefined;
-                            const K3 = await interaction.guild.roles.cache.find(role => role.name === "K3");
-                            const civ = await interaction.guild.roles.cache.find(role => role.name === "Civ");
+                            const newCareer = await interaction.guild.roles.cache.find(role => role.name === careers[career]["role"]);
                             
-                            user.roles.remove(oldRank);
-                            user.roles.add(newRank);
+                            user.roles.remove(oldcareer);
+                            user.roles.add(newCareer);
 
-                            staffPermissions && user.roles.add(staffPermissions);
+                            updateMessage(client);
 
-                            user.roles.remove(oldExtra);
-                            user.roles.add(newExtra);
-
-                            user.roles.add(K3);
-                            user.roles.remove(civ);
-
-                            await user.setNickname(units[enlisted[enlisteeId].unit]["unit tag"] + ' ' + ranks[rank]["rank tag"] + ' ' + enlisted[enlisteeId].nickname)
-
-                            rankConfirmation.update({
-                                content: `Changed <@${enlisteeId}>'s rank to ${rank}.`,
+                            careerConfirmation.update({
+                                content: `Changed <@${enlisteeId}>'s career to ${career}.`,
                                 components: [],
                             });
                         } catch(err) {
@@ -155,7 +130,7 @@ module.exports = {
                             await interaction.update("Something went wrong")
                         }
 
-                    } else if (rankConfirmation.customId === 'cancel') {
+                    } else if (careerConfirmation.customId === 'cancel') {
                         await interaction.editReply({ content: 'Cancelled', components: [] });
                         return;
                     }

@@ -1,19 +1,22 @@
 const {StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, UserSelectMenuBuilder} = require('discord.js');
+const { log } = require('node:console');
 
 const fs = require('node:fs');
+const { default: updateMessage } = require('../message');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('career')
-		.setDescription('assign somebody to a career!'),
+		.setName('unit')
+		.setDescription('assign somebody to a unit!'),
         
 	async execute(interaction) {
         const client = interaction.client;
-        const careers = client.careers;
+        const ranks = client.ranks;
+        const units = client.units;
         const enlisted = client.enlisted;
-
-        const interacterId = interaction.member.user.id;
         
+        const interacterId = interaction.member.user.id;
+
         // User ----------------
 
         const userSelect = new UserSelectMenuBuilder()
@@ -23,24 +26,23 @@ module.exports = {
         const userRow = new ActionRowBuilder()
         .addComponents(userSelect)
 		
-        // career ----------------
+        // Rank ----------------
 
-        const careerSelect = new StringSelectMenuBuilder()
-			.setCustomId('career')
+        const unitSelect = new StringSelectMenuBuilder()
+			.setCustomId('unit')
 			.setPlaceholder('Make a selection!');
         
-		for (const [career, _] of Object.entries(careers)) {
-
-            careerSelect.addOptions(
+		for (const [unit, _] of Object.entries(units)) {
+            unitSelect.addOptions(
 				new StringSelectMenuOptionBuilder()
-					.setLabel(career)
-					.setDescription('Assign the person to ' + career )
-					.setValue(career)
+					.setLabel(unit)
+					.setDescription('Assign the person to ' + unit )
+					.setValue(unit)
             )
         }
 
-		const careerRow = new ActionRowBuilder()
-			.addComponents(careerSelect);
+		const unitRow = new ActionRowBuilder()
+			.addComponents(unitSelect);
 
 
 		const cancel = new ButtonBuilder()
@@ -51,17 +53,17 @@ module.exports = {
 		const cancelRow = new ActionRowBuilder()
 			.addComponents(cancel);
 
-        // messages -------------------------------
+    // messages -------------------------------
 
         interaction.reply({
-            content: `Who do you want to assign?`,
+            content: `Who do you want to transfer?`,
 			components: [userRow, cancelRow],
         });
 
 
         try {
             const reply = await interaction.fetchReply();
-
+            
             let userConfirmation = {member: {id: 0}}
 
             while (userConfirmation.member.id !== interacterId) userConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
@@ -69,7 +71,6 @@ module.exports = {
             if (userConfirmation.customId === 'user') {
                 const enlisteeId = userConfirmation.values[0];
                 const user = await interaction.guild.members.fetch(enlisteeId);
-                const enlistee = enlisted[enlisteeId];
 
                 if (enlisteeId == interaction.guild.ownerId) {
                     await userConfirmation.update({content: "No permission to change this soldier (server owner)", components: []});
@@ -81,44 +82,55 @@ module.exports = {
                     return;
                 }
 
-                const oldcareer = interaction.guild.roles.cache.find(role => role.name === careers[enlistee.career]["role"]);
+                const enlistee = enlisted[enlisteeId];
+
+                const oldUnit = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["unit role"]);
+                const oldExtra = units[enlistee.unit]["extra role"]!=="" ? interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra role"]) : undefined;
 
                 userConfirmation.update({
-                    content: `What career do you want to assign to?`,
-                    components: [careerRow, cancelRow],
+                    content: `What unit do you want to transfer to?`,
+                    components: [unitRow, cancelRow],
                 })
 
                 try {
                     const reply = await interaction.fetchReply();
+                    
+                    let unitConfirmation = {member: {id: 0}}
 
-                    let careerConfirmation = {member: {id: 0}}
-
-                    while (careerConfirmation.member.id !== interacterId) careerConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
+                    while (unitConfirmation.member.id !== interacterId) unitConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
 
                     
-                    if (careerConfirmation.customId === 'career') {
-                        const career = careerConfirmation.values[0];
+                    if (unitConfirmation.customId === 'unit') {
+                        const unit = unitConfirmation.values[0];
 
                         try{
 
-                            enlistee.career = career;
+                            enlistee.unit = unit;
                             enlisted[enlisteeId] = enlistee;
                     
                             fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
                                 if(err){
                                     console.log(err);
                                 }else{
-                                    console.log('career changed');
+                                    console.log('unit changed');
                                 }
                             });
                             
-                            const newCareer = await interaction.guild.roles.cache.find(role => role.name === careers[career]["role"]);
+                            const newUnit = await interaction.guild.roles.cache.find(role => role.name === units[unit]["unit role"]);
+                            const newExtra = units[unit]["extra role"]!=="" ? interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra role"]) : undefined;
                             
-                            user.roles.remove(oldcareer);
-                            user.roles.add(newCareer);
+                            user.roles.remove(oldUnit);
+                            user.roles.add(newUnit);
 
-                            careerConfirmation.update({
-                                content: `Changed <@${enlisteeId}>'s career to ${career}.`,
+                            oldExtra && user.roles.remove(oldExtra);
+                            newExtra && user.roles.add(newExtra);
+                            
+                            await user.setNickname(units[unit]["unit tag"] + ' ' + ranks[enlisted[enlisteeId].rank]["rank tag"] + ' ' + enlisted[enlisteeId].nickname)
+
+                            updateMessage(client);
+
+                            unitConfirmation.update({
+                                content: `Changed <@${enlisteeId}>'s unit to ${unit}.`,
                                 components: [],
                             });
                         } catch(err) {
@@ -127,7 +139,7 @@ module.exports = {
                             await interaction.update("Something went wrong")
                         }
 
-                    } else if (careerConfirmation.customId === 'cancel') {
+                    } else if (unitConfirmation.customId === 'cancel') {
                         await interaction.editReply({ content: 'Cancelled', components: [] });
                         return;
                     }

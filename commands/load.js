@@ -1,6 +1,7 @@
 const {SlashCommandBuilder, MessageFlags} = require('discord.js')
 
 const fs = require('node:fs');
+const { default: updateMessage } = require('../message');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -45,7 +46,6 @@ module.exports = {
                 enlisted[member.user.id].nickname = member.nickname?member.nickname.slice(9).trim():member.user.globalName.slice(0,25).trim()
 
                 const roles = member.roles.cache;
-                console.log(member.nickname);
                 
                 roles.forEach(role => {
 
@@ -71,7 +71,6 @@ module.exports = {
                         })
                     }
                     if ("K3" === role.name) {
-                        console.log(role.name)
                         enlisted[member.user.id].active = true
                     }
 
@@ -82,7 +81,6 @@ module.exports = {
         }); 
 
         client.enlisted = enlisted
-        console.log(enlisted);
 
         fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
             if(err){
@@ -91,7 +89,8 @@ module.exports = {
                 console.log('Loaded');
             }
         });
-
+        updateMessage(client)
         interaction.editReply({content: "Loaded", flags: MessageFlags.Ephemeral})
+        console.log('Loaded!');
 	}
 }

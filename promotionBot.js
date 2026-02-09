@@ -67,8 +67,8 @@ fs.readFile("./enlisted.txt", "utf-8", (err, data) => {
     }
 })
 
-const commandsPath = path.join(__dirname, "");
-const commandsFiles = fs.readdirSync(commandsPath).filter(file => {if (!(file === "promotionBot.js")) return file.endsWith('.js')});
+const commandsPath = path.join(__dirname, "commands");
+const commandsFiles = fs.readdirSync(commandsPath);
 
 const commands = new Collection();
 
@@ -101,7 +101,7 @@ client.on('guildMemberAdd', member => {
     let enlistee = {};
 
     if (!(member.id in enlisted)) {
-        const name = member.user.globalName
+        const name = member.user.globalName || member.user.username || "Soldier";
         enlistee.nickname = (name.length>20 ? name.slice(0,20) : name);
         enlistee.rank = ranks[0];
         enlistee.unit = units[0];
@@ -160,6 +160,7 @@ client.on('ready', async() => {
                 enlistee.rank = Object.keys(ranks)[0];
                 enlistee.unit = Object.keys(units)[0];
                 enlistee.career = Object.keys(careers)[0];
+                enlistee.active = false;
 
                 if (member.id === guild.ownerId) enlistee.rank = Object.keys(ranks)[Object.keys(ranks).length - 1]
 
@@ -202,7 +203,6 @@ client.on('ready', async() => {
         }); 
 
         client.enlisted = enlisted;
-        console.log(enlisted);
 
         fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
             if(err){

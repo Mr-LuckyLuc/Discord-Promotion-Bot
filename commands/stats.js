@@ -1,0 +1,34 @@
+const {SlashCommandBuilder, MessageFlags} = require('discord.js');
+const { default: updateMessage } = require('../message');
+
+module.exports = {
+	data: new SlashCommandBuilder()
+		.setName('stats')
+		.setDescription('See the stats')
+		.addBooleanOption((option) => option
+			.setName('visible')
+			.setDescription('Whether or not the stats should be visible to everyone')
+		),
+        
+	async execute(interaction) {
+
+		const visible = interaction.options.getBoolean('visible');
+
+        await interaction.reply({ content: "Generating Stats ...", flags: MessageFlags.Ephemeral }); 
+
+    	const client = interaction.client;
+
+		if (visible) {
+			const channel = await interaction.member.guild.channels.fetch(interaction.channelId)
+
+			const msg = await channel.send("Generating Stats ...");
+
+			client.message = msg
+		}
+
+		const message = updateMessage(client)
+
+		if (!visible) await interaction.editReply({ content: message, flags: MessageFlags.Ephemeral })
+		
+	}
+}
