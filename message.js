@@ -38,7 +38,7 @@ export default function updateMessage(client) {
     }
 
     for (const unit of Object.keys(units).filter(unit => !seperatedUnits.includes(unit))) {
-        message += `## ${unit}\n`
+        message += `## __${unit}__\n`
         
         const platoon = reformatted.filter(enlistee => enlistee.unit === unit);
         const platoonLeader = platoon.filter(enlistee => platoonLeaderFilter.includes(enlistee.rank))
@@ -73,7 +73,7 @@ export default function updateMessage(client) {
     }
 
     for (const unit of Object.keys(units).filter(unit => seperatedUnits.includes(unit))) {
-        message += `## ${unit}\n`
+        message += `## __${unit}__\n`
 
         const seperatedRest = reformatted.filter(enlistee => enlistee.unit === unit);
 
