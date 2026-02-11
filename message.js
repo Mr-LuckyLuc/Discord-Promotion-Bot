@@ -13,8 +13,8 @@ function updateMessage(client) {
     const platoonLeaderFilter = ["Lieutenant"]
     const platoonStaffFilter = ["Sergeant", "Corporal"]
     const seperatedUnitsFilter = ["Motala Helicopter Squadron, 1st", "Motala Helicopter Squadron, 2nd"]
-    const seperatedLeadersFilter = ["Lieutenant"]
-    const seperatedCareersFilter = ["Aircrew Specialist"]
+    const seperatedLeaderFilter = ["Lieutenant"]
+    const seperatedCareerFilter = ["Aircrew Specialist"]
 
     let message = "# 1st Light Cavalry Company \n"
     message += "__**Order of Battle**__ \n"
@@ -81,7 +81,7 @@ function updateMessage(client) {
         if (list.length === 0) list = "     "
         embed.addFields({ name: 'Platoon Staff', value: list })
 
-        for (const [careerName, career] of Object.entries(careers).filter(([career, _]) => !seperatedCareersFilter.includes(career))) {
+        for (const [careerName, career] of Object.entries(careers).filter(([career, _]) => !seperatedCareerFilter.includes(career))) {
             const group = rest.filter(enlistee => enlistee.career===careerName)
             message += `### ${career["display name"]} ${group.length}/${career.amount}\n`;
             list = ""
@@ -117,7 +117,7 @@ function updateMessage(client) {
             }
         }
 
-        for (const [careerName, career] of Object.entries(careers).filter(([career, _]) => seperatedCareersFilter.includes(career))) {
+        for (const [careerName, career] of Object.entries(careers).filter(([career, _]) => seperatedCareerFilter.includes(career))) {
             const group = seperatedRest.filter(enlistee => enlistee.career===careerName)
             message += `### ${career["display name"]} ${group.length}/${career.amount}\n`;
             list = ""
