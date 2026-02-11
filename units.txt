@@ -1,6 +1,6 @@
 {
-"4th Platoon": {"unit tag": "[4]", "unit role": "4th Platoon", "extra role": ""},
-"3rd Platoon": {"unit tag": "[3]", "unit role": "3rd Platoon", "extra role": ""},
-"Motala Helicopter Squadron, 1st": {"unit tag": "[M1]", "unit role": "Motala Helicopter Squadron", "extra role": "MHS, 1st Flight"},
-"Motala Helicopter Squadron, 2nd": {"unit tag": "[M2]", "unit role": "Motala Helicopter Squadron", "extra role": "MHS, 2nd Flight"}
+"4th Platoon": {"unit tag": "[4]", "unit role": "4th Platoon", "extra role": "", "display name": "4rd Platoon"},
+"3rd Platoon": {"unit tag": "[3]", "unit role": "3rd Platoon", "extra role": "", "display name": "3rd Platoon"},
+"Motala Helicopter Squadron, 1st": {"unit tag": "[M1]", "unit role": "Motala Helicopter Squadron", "extra role": "MHS, 1st Flight", "display name": "Motala Helicopter Squadron, 1st flight"},
+"Motala Helicopter Squadron, 2nd": {"unit tag": "[M2]", "unit role": "Motala Helicopter Squadron", "extra role": "MHS, 2nd Flight", "display name": "Motala Helicopter Squadron, 2nd flight"}
 }

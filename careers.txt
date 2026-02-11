@@ -1,7 +1,7 @@
 {
-    "Rifleman": {"role": "Rifleman"}, 
-    "SAW Gunner": {"role": "SAW Gunner"}, 
-    "Marksman": {"role": "Marksman"}, 
-    "Vehicle Specialist": {"role": "Vehicle Specialist"}, 
-    "Aircrew Specialist": {"role": "Aircrew Specialist"}
+    "Rifleman": {"role": "Rifleman", "amount": 15, "display name": "Riflemen"}, 
+    "SAW Gunner": {"role": "SAW Gunner", "amount": 3, "display name": "SAW Gunners"}, 
+    "Marksman": {"role": "Marksman", "amount": 3, "display name": "Marksmen"}, 
+    "Vehicle Specialist": {"role": "Vehicle Specialist", "amount": 10, "display name": "Vehicle Specialists"}, 
+    "Aircrew Specialist": {"role": "Aircrew Specialist", "amount": 9, "display name": "Aircrew Specialists"}
 }

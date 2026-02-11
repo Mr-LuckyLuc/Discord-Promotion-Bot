@@ -7,13 +7,14 @@ function updateMessage(client) {
     const careers = client.careers;
     
     const me = "540576751005466637"
-    const picture = "https://cdn.discordapp.com/attachments/1467595806419849219/1469732485339545690/K3_logo.webp?ex=698c064a&is=698ab4ca&hm=950084da319177e8d69dd2f314c0977c090020f436bc32dcd5cef15f6bbba48a&"
+    const picture = "https://cdn.discordapp.com/attachments/1467595806419849219/1469732485339545690/K3_logo.webp" // ?ex=698c064a&is=698ab4ca&hm=950084da319177e8d69dd2f314c0977c090020f436bc32dcd5cef15f6bbba48a&
     const companyLeaderFilter = ["Captain"]
     const companyStaffFilter = ["First Sergeant"]
     const platoonLeaderFilter = ["Lieutenant"]
     const platoonStaffFilter = ["Sergeant", "Corporal"]
-    const seperatedUnits = ["Motala Helicopter Squadron, 1st", "Motala Helicopter Squadron, 2nd"]
-    const seperatedCareers = ["Aircrew Specialist"]
+    const seperatedUnitsFilter = ["Motala Helicopter Squadron, 1st", "Motala Helicopter Squadron, 2nd"]
+    const seperatedLeadersFilter = ["Lieutenant"]
+    const seperatedCareersFilter = ["Aircrew Specialist"]
 
     let message = "# 1st Light Cavalry Company \n"
     message += "__**Order of Battle**__ \n"
@@ -51,13 +52,13 @@ function updateMessage(client) {
     embed.addFields({ name: 'Company Staff', value: list})
     embeds.push(embed)
 
-    for (const unit of Object.keys(units).filter(unit => !seperatedUnits.includes(unit))) {
-        message += `## __${unit}__\n`
+    for (const [unitName, unit] of Object.entries(units).filter(([unit, _]) => !seperatedUnitsFilter.includes(unit))) {
+        message += `## __${unit["display name"]}__\n`
         embed = new EmbedBuilder()
 				.setColor(0x0099ff)
-				.setTitle(`${unit}`)
+				.setTitle(`${unit["display name"]}`)
         
-        const platoon = reformatted.filter(enlistee => enlistee.unit === unit);
+        const platoon = reformatted.filter(enlistee => enlistee.unit === unitName);
         const platoonLeader = platoon.filter(enlistee => platoonLeaderFilter.includes(enlistee.rank))
         const platoonStaff = platoon.filter(enlistee => platoonStaffFilter.includes(enlistee.rank))
         const rest = platoon.filter(enlistee => !companyLeaderFilter.includes(enlistee.rank) && !platoonLeaderFilter.includes(enlistee.rank) && !platoonStaffFilter.includes(enlistee.rank))
@@ -80,9 +81,9 @@ function updateMessage(client) {
         if (list.length === 0) list = "     "
         embed.addFields({ name: 'Platoon Staff', value: list })
 
-        for (const career of Object.keys(careers).filter(career => !seperatedCareers.includes(career))) {
-            const group = rest.filter(enlistee => enlistee.career===career)
-            message += `### ${career}: ${group.length}\n`;
+        for (const [careerName, career] of Object.entries(careers).filter(([career, _]) => !seperatedCareersFilter.includes(career))) {
+            const group = rest.filter(enlistee => enlistee.career===careerName)
+            message += `### ${career["display name"]} ${group.length}/${career.amount}\n`;
             list = ""
 
             for (const rank of rankList) {
@@ -93,23 +94,32 @@ function updateMessage(client) {
                 }
             }
             if (list.length === 0) list = "     "
-            embed.addFields({ name: `${career}: ${group.length}`, value: list })
+            embed.addFields({ name: `${career["display name"]} ${group.length}/${career.amount}`, value: list })
         }
         embeds.push(embed)
 
     }
 
-    for (const unit of Object.keys(units).filter(unit => seperatedUnits.includes(unit))) {
-        message += `## __${unit}__\n`
+    for (const [unitName, unit] of Object.entries(units).filter(([unit, _]) => seperatedUnitsFilter.includes(unit))) {
+        message += `## __${unit["display name"]}__\n`
         embed = new EmbedBuilder()
             .setColor(0x0099ff)
-            .setTitle(`${unit}`)
+            .setTitle(`${unit["display name"]}`)
 
-        const seperatedRest = reformatted.filter(enlistee => enlistee.unit === unit);
+        const seperated = reformatted.filter(enlistee => enlistee.unit === unitName);
+        const seperatedLeader = seperated.filter(enlistee => seperatedLeaderFilter.includes(enlistee.rank))
+        const seperatedRest = seperated.filter(enlistee => enlistee.unit === unitName);
 
-        for (const career of Object.keys(careers).filter(career => seperatedCareers.includes(career))) {
-            const group = seperatedRest.filter(enlistee => enlistee.career===career)
-            message += `### ${career}: ${group.length}\n`;
+        for (const filter of platoonLeaderFilter) {
+            for (const person of seperatedLeader.filter(enlistee => enlistee.rank === filter)) {
+                message += `**Flight Commander \n** <@${person.id}> \n\n`
+                embed.addFields({ name: 'Flight Commander', value: `<@${person.id}>`, inline: true})
+            }
+        }
+
+        for (const [careerName, career] of Object.entries(careers).filter(([career, _]) => seperatedCareersFilter.includes(career))) {
+            const group = seperatedRest.filter(enlistee => enlistee.career===careerName)
+            message += `### ${career["display name"]} ${group.length}/${career.amount}\n`;
             list = ""
             
             for (const rank of rankList) {
@@ -120,7 +130,7 @@ function updateMessage(client) {
                 }
             }
             if (list.length === 0) list = "     "
-            embed.addFields({ name: `${career}: ${group.length}`, value: list })
+            embed.addFields({ name: `${career["display name"]} ${group.length}/${career.amount}`, value: list })
         }
         embeds.push(embed)
 

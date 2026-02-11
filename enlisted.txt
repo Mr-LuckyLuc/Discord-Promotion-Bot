@@ -1,1 +1,1 @@
-{}
+{"540576751005466637":{"rank":"Major","unit":"4th Platoon","career":"Rifleman","active":false,"nickname":"utLonger"},"977866839013072926":{"rank":"Private","unit":"4th Platoon","career":"Rifleman","active":true,"nickname":"subject2"}}
