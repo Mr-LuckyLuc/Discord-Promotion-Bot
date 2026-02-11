@@ -108,7 +108,7 @@ function updateMessage(client) {
 
         const seperated = reformatted.filter(enlistee => enlistee.unit === unitName);
         const seperatedLeader = seperated.filter(enlistee => seperatedLeaderFilter.includes(enlistee.rank))
-        const seperatedRest = seperated.filter(enlistee => enlistee.unit === unitName);
+        const seperatedRest = seperated.filter(enlistee => !seperatedLeaderFilter.includes(enlistee.rank));
 
         for (const filter of platoonLeaderFilter) {
             for (const person of seperatedLeader.filter(enlistee => enlistee.rank === filter)) {
