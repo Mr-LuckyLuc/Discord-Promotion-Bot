@@ -132,7 +132,7 @@ client.on('guildMemberRemove', member => {
         if(err){
             console.log(err);
         }else{
-            console.log('discharged');
+            console.log('person left');
         }
     });
 
