@@ -48,7 +48,7 @@ function updateMessage(client) {
         }
     }
     
-    embed.addFields({ name: 'Company Staff', value: list, inline: true})
+    embed.addFields({ name: 'Company Staff', value: list})
     embeds.push(embed)
 
     for (const unit of Object.keys(units).filter(unit => !seperatedUnits.includes(unit))) {
