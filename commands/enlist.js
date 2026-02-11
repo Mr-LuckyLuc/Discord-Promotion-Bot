@@ -1,5 +1,5 @@
 const {ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, UserSelectMenuBuilder} = require('discord.js');
-const { default: updateMessage } = require('../message');
+const { updateMessage } = require('../message');
 
 module.exports = {
 	data: new SlashCommandBuilder()

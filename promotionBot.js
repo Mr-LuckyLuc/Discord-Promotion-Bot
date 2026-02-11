@@ -6,6 +6,7 @@ const path = require('node:path');
 const fs = require('node:fs');
 
 const { Client, Collection, Events, GatewayIntentBits, REST, Routes} = require('discord.js');
+const { updateMessage } = require("./message");
 
 // setup ----------------------------------------------
 
@@ -134,6 +135,8 @@ client.on('guildMemberRemove', member => {
             console.log('discharged');
         }
     });
+
+    updateMessage(client);
 
 });
 

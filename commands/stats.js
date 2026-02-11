@@ -1,5 +1,5 @@
-const {SlashCommandBuilder, MessageFlags} = require('discord.js');
-const { default: updateMessage } = require('../message');
+const {SlashCommandBuilder, MessageFlags, EmbedBuilder} = require('discord.js');
+const { updateMessage } = require('../message');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -21,7 +21,11 @@ module.exports = {
 		if (visible) {
 			const channel = await interaction.member.guild.channels.fetch(interaction.channelId)
 
-			const msg = await channel.send("Generating Stats ...");
+			const myEmbed = new EmbedBuilder()
+				.setColor(0x0099ff)
+				.setTitle('Loading ...')
+
+			msg = await channel.send({content: "# 1st Light Cavalry Company", embeds: [myEmbed] });
 
 			client.message = msg
 		}
@@ -29,6 +33,7 @@ module.exports = {
 		const message = updateMessage(client)
 
 		if (!visible) await interaction.editReply({ content: message, flags: MessageFlags.Ephemeral })
+		console.log(`${visible?"Publicly":"Privatly"} displaying stats`)
 		
 	}
 }
