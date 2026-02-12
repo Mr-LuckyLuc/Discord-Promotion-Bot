@@ -1,7 +1,7 @@
-const {SlashCommandBuilder, MessageFlags} = require('discord.js')
+const {SlashCommandBuilder, MessageFlags} = require('discord.js');
 
 const fs = require('node:fs');
-const { default: updateMessage } = require('../message');
+const { updateMessage } = require('../message');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -19,13 +19,13 @@ module.exports = {
         const members = await interaction.member.guild.members.fetch();
 
         const rankList = Object.fromEntries(Object.entries(ranks).map(([i, rank])=> {
-            return [rank["rank role"], i]
+            return [rank["rank role"], i];
         }));
         const unitList = Object.fromEntries(Object.entries(units).map(([i, unit])=> {
-            return [unit["extra role"]?unit["extra role"]:unit["unit role"], i]
+            return [unit["extra role"]?unit["extra role"]:unit["unit role"], i];
         }));
         const careerList = Object.fromEntries(Object.entries(careers).map(([i, career])=> {
-            return [career["role"], i]
+            return [career["role"], i];
         }));
 
         const enlisted = {};
@@ -39,11 +39,11 @@ module.exports = {
                 enlistee.career = Object.keys(careers)[0];
                 enlistee.active = false;
 
-                if (member.id === interaction.guild.ownerId) enlistee.rank = Object.keys(ranks)[Object.keys(ranks).length - 1]
+                if (member.id === interaction.guild.ownerId) enlistee.rank = Object.keys(ranks)[Object.keys(ranks).length - 1];
 
                 enlisted[member.id] = enlistee;
 
-                enlisted[member.user.id].nickname = member.nickname?member.nickname.slice(9).trim():member.user.globalName.slice(0,25).trim()
+                enlisted[member.user.id].nickname = member.nickname?member.nickname.slice(9).trim():member.user.globalName.slice(0,25).trim();
 
                 const roles = member.roles.cache;
                 
@@ -52,26 +52,26 @@ module.exports = {
                     if (role.name in rankList) {
                         Object.entries(rankList).forEach( ([i, rank]) => {
                             if (i === role.name) {
-                                enlisted[member.user.id].rank = rank
+                                enlisted[member.user.id].rank = rank;
                             }
                         })
                     }
                     if (role.name in unitList) {
                         Object.entries(unitList).forEach( ([i, unit]) => {
                             if (i === role.name) {
-                                enlisted[member.user.id].unit = unit
+                                enlisted[member.user.id].unit = unit;
                             }
                         })
                     }
                     if (role.name in careerList) {
                         Object.entries(careerList).forEach( ([i, career]) => {
                             if (i === role.name) {
-                                enlisted[member.user.id].career = career
+                                enlisted[member.user.id].career = career;
                             }
                         })
                     }
                     if ("K3" === role.name) {
-                        enlisted[member.user.id].active = true
+                        enlisted[member.user.id].active = true;
                     }
 
                 });
@@ -90,7 +90,7 @@ module.exports = {
             }
         });
         updateMessage(client)
-        interaction.editReply({content: "Loaded", flags: MessageFlags.Ephemeral})
+        interaction.editReply({content: "Loaded", flags: MessageFlags.Ephemeral});
         console.log('Loaded!');
 	}
 }

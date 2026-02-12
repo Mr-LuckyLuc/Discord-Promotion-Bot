@@ -19,21 +19,21 @@ module.exports = {
     	const client = interaction.client;
 
 		if (visible) {
-			const channel = await interaction.member.guild.channels.fetch(interaction.channelId)
+			const channel = await interaction.member.guild.channels.fetch(interaction.channelId);
 
 			const myEmbed = new EmbedBuilder()
 				.setColor(0x0099ff)
-				.setTitle('Loading ...')
+				.setTitle('Loading ...');
 
 			msg = await channel.send({content: "# 1st Light Cavalry Company", embeds: [myEmbed] });
 
 			client.message = msg
 		}
 
-		const message = updateMessage(client)
+		const message = updateMessage(client);
 
-		if (!visible) await interaction.editReply({ content: message, flags: MessageFlags.Ephemeral })
-		console.log(`${visible?"Publicly":"Privatly"} displaying stats`)
+		if (!visible) await interaction.editReply({ content: message, flags: MessageFlags.Ephemeral });
+		console.log(`${visible?"Publicly":"Privatly"} displaying stats`);
 		
 	}
 }

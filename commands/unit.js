@@ -1,5 +1,4 @@
 const {StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, UserSelectMenuBuilder} = require('discord.js');
-const { log } = require('node:console');
 
 const fs = require('node:fs');
 const { updateMessage } = require('../message');
@@ -24,7 +23,7 @@ module.exports = {
         .setPlaceholder('Make a selection!');
 
         const userRow = new ActionRowBuilder()
-        .addComponents(userSelect)
+        .addComponents(userSelect);
 		
         // Rank ----------------
 
@@ -38,7 +37,7 @@ module.exports = {
 					.setLabel(unit)
 					.setDescription('Assign the person to ' + unit )
 					.setValue(unit)
-            )
+            );
         }
 
 		const unitRow = new ActionRowBuilder()
@@ -64,7 +63,7 @@ module.exports = {
         try {
             const reply = await interaction.fetchReply();
             
-            let userConfirmation = {member: {id: 0}}
+            let userConfirmation = {member: {id: 0}};
 
             while (userConfirmation.member.id !== interacterId) userConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
 
@@ -90,12 +89,12 @@ module.exports = {
                 userConfirmation.update({
                     content: `What unit do you want to transfer to?`,
                     components: [unitRow, cancelRow],
-                })
+                });
 
                 try {
                     const reply = await interaction.fetchReply();
                     
-                    let unitConfirmation = {member: {id: 0}}
+                    let unitConfirmation = {member: {id: 0}};
 
                     while (unitConfirmation.member.id !== interacterId) unitConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
 
@@ -125,7 +124,7 @@ module.exports = {
                             oldExtra && user.roles.remove(oldExtra);
                             newExtra && user.roles.add(newExtra);
                             
-                            await user.setNickname(units[unit]["unit tag"] + ' ' + ranks[enlisted[enlisteeId].rank]["rank tag"] + ' ' + enlisted[enlisteeId].nickname)
+                            await user.setNickname(units[unit]["unit tag"] + ' ' + ranks[enlisted[enlisteeId].rank]["rank tag"] + ' ' + enlisted[enlisteeId].nickname);
 
                             updateMessage(client);
 
@@ -136,7 +135,7 @@ module.exports = {
                         } catch(err) {
                             console.log(err);
                             
-                            await interaction.update("Something went wrong")
+                            await interaction.update("Something went wrong");
                         }
 
                     } else if (unitConfirmation.customId === 'cancel') {

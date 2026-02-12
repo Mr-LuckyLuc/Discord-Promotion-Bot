@@ -26,7 +26,7 @@ module.exports = {
         .setPlaceholder('Make a selection!');
 
         const userRow = new ActionRowBuilder()
-        .addComponents(userSelect)
+        .addComponents(userSelect);
 		
         // Rank ----------------
 
@@ -48,7 +48,7 @@ module.exports = {
 					.setLabel(rank)
 					.setDescription('Promote the person to ' + rank )
 					.setValue(rank)
-            )
+            );
         }
 
 		const rankRow = new ActionRowBuilder()
@@ -101,12 +101,12 @@ module.exports = {
                 userConfirmation.update({
                     content: `What rank do you want to promote to?`,
                     components: [rankRow, cancelRow],
-                })
+                });
 
                 try {
                     const reply = await interaction.fetchReply();
 
-                    let rankConfirmation = {member: {id: 0}}
+                    let rankConfirmation = {member: {id: 0}};
 
                     while (rankConfirmation.member.id !== interacterId) rankConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
                     
@@ -144,7 +144,7 @@ module.exports = {
                             user.roles.add(K3);
                             user.roles.remove(civ);
 
-                            await user.setNickname(units[enlisted[enlisteeId].unit]["unit tag"] + ' ' + ranks[rank]["rank tag"] + ' ' + enlisted[enlisteeId].nickname)
+                            await user.setNickname(units[enlisted[enlisteeId].unit]["unit tag"] + ' ' + ranks[rank]["rank tag"] + ' ' + enlisted[enlisteeId].nickname);
 
                             updateMessage(client);
 
@@ -155,7 +155,7 @@ module.exports = {
                         } catch(err) {
                             console.log(err);
                             
-                            await interaction.update("Something went wrong")
+                            await interaction.update("Something went wrong");
                         }
 
                     } else if (rankConfirmation.customId === 'cancel') {

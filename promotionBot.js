@@ -104,20 +104,21 @@ client.on('guildMemberAdd', member => {
     if (!(member.id in enlisted)) {
         const name = member.user.globalName || member.user.username || "Soldier";
         enlistee.nickname = (name.length>20 ? name.slice(0,20) : name);
-        enlistee.rank = ranks[0];
-        enlistee.unit = units[0];
-        enlistee.career = careers[0];
-        enlisted[member.id] =  enlistee;
+        enlistee.rank = Object.keys(ranks)[0];
+        enlistee.unit = Object.keys(units)[0];
+        enlistee.career = Object.keys(careers)[0];
+        
+        enlisted[member.id] = enlistee;
 
         fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
             if(err){
                 console.log(err);
             }else{
-                console.log('person added');
+                console.log('person joined');
             }
         });
 
-        client.enlisted = enlisted
+        client.enlisted = enlisted;
     }
 });
 
@@ -158,19 +159,19 @@ client.on(Events.InteractionCreate, (interaction) => {
 client.login(process.env.TOKEN);
 
 client.on('ready', async() => {
-    const guild = client.guilds.cache.get(process.env.GUILDID)
+    const guild = client.guilds.cache.get(process.env.GUILDID);
 
     if (Object.keys(enlisted).length === 0) {
         const members = await guild.members.fetch();
 
         const rankList = Object.fromEntries(Object.entries(ranks).map(([i, rank])=> {
-            return [rank["rank role"], i]
+            return [rank["rank role"], i];
         }));
         const unitList = Object.fromEntries(Object.entries(units).map(([i, unit])=> {
-            return [unit["extra role"]?unit["extra role"]:unit["unit role"], i]
+            return [unit["extra role"]?unit["extra role"]:unit["unit role"], i];
         }));
         const careerList = Object.fromEntries(Object.entries(careers).map(([i, career])=> {
-            return [career["role"], i]
+            return [career["role"], i];
         }));
 
         members.forEach(member => {
@@ -182,11 +183,11 @@ client.on('ready', async() => {
                 enlistee.career = Object.keys(careers)[0];
                 enlistee.active = false;
 
-                if (member.id === guild.ownerId) enlistee.rank = Object.keys(ranks)[Object.keys(ranks).length - 1]
+                if (member.id === guild.ownerId) enlistee.rank = Object.keys(ranks)[Object.keys(ranks).length - 1];
 
                 enlisted[member.id] = enlistee;
 
-                enlisted[member.user.id].nickname = member.nickname?member.nickname.slice(9).trim():member.user.globalName.slice(0,25).trim()
+                enlisted[member.user.id].nickname = member.nickname?member.nickname.slice(9).trim():member.user.globalName.slice(0,25).trim();
 
                 const roles = member.roles.cache;
                 
@@ -195,26 +196,26 @@ client.on('ready', async() => {
                     if (role.name in rankList) {
                         Object.entries(rankList).forEach( ([i, rank]) => {
                             if (i === role.name) {
-                                enlisted[member.user.id].rank = rank
+                                enlisted[member.user.id].rank = rank;
                             }
                         })
                     }
                     if (role.name in unitList) {
                         Object.entries(unitList).forEach( ([i, unit]) => {
                             if (i === role.name) {
-                                enlisted[member.user.id].unit = unit
+                                enlisted[member.user.id].unit = unit;
                             }
                         })
                     }
                     if (role.name in careerList) {
                         Object.entries(careerList).forEach( ([i, career]) => {
                             if (i === role.name) {
-                                enlisted[member.user.id].career = career
+                                enlisted[member.user.id].career = career;
                             }
                         })
                     }
                     if ("K3" === role.name) {
-                        enlisted[member.user.id].active = true
+                        enlisted[member.user.id].active = true;
                     }
                 });
         

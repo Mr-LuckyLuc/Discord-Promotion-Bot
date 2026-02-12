@@ -28,7 +28,7 @@ module.exports = {
         .setPlaceholder('Make a selection!');
 
         const userRow = new ActionRowBuilder()
-        .addComponents(userSelect)
+        .addComponents(userSelect);
 
         const cancel = new ButtonBuilder()
             .setCustomId('cancel')
@@ -47,7 +47,7 @@ module.exports = {
         try {
             const reply = await interaction.fetchReply();
 
-            let userConfirmation = {member: {id: 0}}
+            let userConfirmation = {member: {id: 0}};
 
             while (userConfirmation.member.id !== interacterId) userConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
 
@@ -80,7 +80,7 @@ module.exports = {
                     }
                 });
 
-                await user.setNickname(units[enlisted[enlisteeId].unit]["unit tag"] + ' ' + ranks[enlisted[enlisteeId].rank]["rank tag"] + ' ' + nickname)
+                await user.setNickname(units[enlisted[enlisteeId].unit]["unit tag"] + ' ' + ranks[enlisted[enlisteeId].rank]["rank tag"] + ' ' + nickname);
                 
                 userConfirmation.update({
                     content: `Changed <@${enlisteeId}>'s (${oldNickname}) nickname to ${nickname}.`,

@@ -22,7 +22,7 @@ module.exports = {
         .setPlaceholder('Make a selection!');
 
         const userRow = new ActionRowBuilder()
-        .addComponents(userSelect)
+        .addComponents(userSelect);
 		
         // career ----------------
 
@@ -37,7 +37,7 @@ module.exports = {
 					.setLabel(career)
 					.setDescription('Assign the person to ' + career )
 					.setValue(career)
-            )
+            );
         }
 
 		const careerRow = new ActionRowBuilder()
@@ -63,7 +63,7 @@ module.exports = {
         try {
             const reply = await interaction.fetchReply();
 
-            let userConfirmation = {member: {id: 0}}
+            let userConfirmation = {member: {id: 0}};
 
             while (userConfirmation.member.id !== interacterId) userConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
 
@@ -87,12 +87,12 @@ module.exports = {
                 userConfirmation.update({
                     content: `What career do you want to assign to?`,
                     components: [careerRow, cancelRow],
-                })
+                });
 
                 try {
                     const reply = await interaction.fetchReply();
 
-                    let careerConfirmation = {member: {id: 0}}
+                    let careerConfirmation = {member: {id: 0}};
 
                     while (careerConfirmation.member.id !== interacterId) careerConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
 
@@ -127,7 +127,7 @@ module.exports = {
                         } catch(err) {
                             console.log(err);
                             
-                            await interaction.update("Something went wrong")
+                            await interaction.update("Something went wrong");
                         }
 
                     } else if (careerConfirmation.customId === 'cancel') {
