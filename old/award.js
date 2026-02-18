@@ -100,6 +100,7 @@ module.exports = {
                             });
 
                         } catch(err) {
+                            console.log(Date.now().toLocaleString("en-GB", { timeZone: "CET" }));
                             console.log(err);
                             await interaction.update("Something went wrong")
                         }
@@ -119,6 +120,7 @@ module.exports = {
             }
             
         } catch(err) {
+            console.log(Date.now().toLocaleString("en-GB", { timeZone: "CET" }));
             console.log(err);
             
             await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });

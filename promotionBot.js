@@ -99,6 +99,8 @@ const rest = new REST().setToken(process.env.TOKEN);
 
 client.on('guildMemberAdd', member => {
     
+    if (member.user.bot) return;
+    
     let enlistee = {};
 
     if (!(member.id in enlisted)) {
@@ -112,6 +114,7 @@ client.on('guildMemberAdd', member => {
 
         fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
             if(err){
+                console.log(Date.now().toLocaleString("en-GB", { timeZone: "CET" }));
                 console.log(err);
             }else{
                 console.log('person joined');
@@ -123,6 +126,8 @@ client.on('guildMemberAdd', member => {
 });
 
 client.on('guildMemberRemove', member => {
+    
+    if (member.user.bot) return;
                 
     const enlistee = enlisted[member.id];
     
@@ -131,6 +136,7 @@ client.on('guildMemberRemove', member => {
 
     fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
         if(err){
+            console.log(Date.now().toLocaleString("en-GB", { timeZone: "CET" }));
             console.log(err);
         }else{
             console.log('person left');
@@ -227,6 +233,7 @@ client.on('ready', async() => {
 
         fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
             if(err){
+                console.log(Date.now().toLocaleString("en-GB", { timeZone: "CET" }));
                 console.log(err);
             }else{
                 console.log('Loaded');
