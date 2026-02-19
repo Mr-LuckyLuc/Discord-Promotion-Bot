@@ -74,7 +74,7 @@ module.exports = {
 
                 fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
                     if(err){
-                        console.log(Date.now().toLocaleString("en-GB", { timeZone: "CET" }));
+                        console.log(Date.now());
                         console.log(err);
                     }else{
                         console.log('nickname changed');
@@ -93,7 +93,7 @@ module.exports = {
             }
             
         } catch(err) {
-            console.log(Date.now().toLocaleString("en-GB", { timeZone: "CET" }));
+            console.log(Date.now());
             console.log(err);
             
             await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
