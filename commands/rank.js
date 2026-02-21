@@ -96,6 +96,7 @@ module.exports = {
 
                 const oldRank = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["rank role"]);
                 const oldExtra = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["extra role"]);
+                const oldStaffPermissions = await ranks[enlistee.rank]["staff permissions"]!=="" ? interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["staff permissions"]) : undefined;
 
 
                 userConfirmation.update({
@@ -130,14 +131,15 @@ module.exports = {
                             
                             const newRank = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["rank role"]);
                             const newExtra = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["extra role"]);
-                            const staffPermissions = await ranks[rank]["staff permissions"]!=="" ? interaction.guild.roles.cache.find(role => role.name === ranks[rank]["staff permissions"]) : undefined;
+                            const newStaffPermissions = await ranks[rank]["staff permissions"]!=="" ? interaction.guild.roles.cache.find(role => role.name === ranks[rank]["staff permissions"]) : undefined;
                             const K3 = await interaction.guild.roles.cache.find(role => role.name === "K3");
                             const civ = await interaction.guild.roles.cache.find(role => role.name === "Civ");
                             
                             user.roles.remove(oldRank);
                             user.roles.add(newRank);
 
-                            staffPermissions && user.roles.add(staffPermissions);
+                            newStaffPermissions && user.roles.add(newStaffPermissions);
+                            oldStaffPermissions && user.roles.add(oldStaffPermissions);
 
                             user.roles.remove(oldExtra);
                             user.roles.add(newExtra);

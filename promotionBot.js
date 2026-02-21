@@ -97,9 +97,17 @@ const rest = new REST().setToken(process.env.TOKEN);
     console.log(`Successfully reloaded ${data.length} commands.`);
 })();
 
-client.on('guildMemberAdd', member => {
+client.on('guildMemberAdd', async member => {
     
     if (member.user.bot) return;
+
+    const civ = await interaction.guild.roles.cache.find(role => role.name === "Civ");
+    const taskDesignators = await interaction.guild.roles.cache.find(role => role.name === "-------- Task Designators --------");
+    const administrative = await interaction.guild.roles.cache.find(role => role.name === "--------- Administrative ---------");
+    
+    user.roles.add(civ);
+    user.roles.add(taskDesignators);
+    user.roles.add(administrative);
     
     let enlistee = {};
 
