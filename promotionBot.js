@@ -101,13 +101,13 @@ client.on('guildMemberAdd', async member => {
     
     if (member.user.bot) return;
 
-    const civ = await interaction.guild.roles.cache.find(role => role.name === "Civ");
-    const taskDesignators = await interaction.guild.roles.cache.find(role => role.name === "-------- Task Designators --------");
-    const administrative = await interaction.guild.roles.cache.find(role => role.name === "--------- Administrative ---------");
-    
-    user.roles.add(civ);
-    user.roles.add(taskDesignators);
-    user.roles.add(administrative);
+    const civ = await member.guild.roles.cache.find(role => role.name === "Civ");
+    const taskDesignators = await member.guild.roles.cache.find(role => role.name === "-------- Task Designators --------");
+    const administrative = await member.guild.roles.cache.find(role => role.name === "--------- Administrative ---------");
+
+    member.roles.add(civ);
+    member.roles.add(taskDesignators);
+    member.roles.add(administrative);
     
     let enlistee = {};
 
