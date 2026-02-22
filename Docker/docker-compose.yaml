@@ -1,0 +1,15 @@
+services:
+
+  app:
+    image: promotion-bot
+    environment:
+      TOKEN: ${TOKEN}
+      CLIENTID: ${CLIENTID}
+      GUILDID: ${GUILDID}
+    expose:
+        - 3000
+    networks:
+      - net
+
+networks:
+  net:
