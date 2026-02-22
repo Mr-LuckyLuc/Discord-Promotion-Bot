@@ -97,13 +97,13 @@ const rest = new REST().setToken(process.env.TOKEN);
     console.log(`Successfully reloaded ${data.length} commands.`);
 })();
 
-client.on('guildMemberAdd', async member => {
+client.on('guildMemberAdd', member => {
     
     if (member.user.bot) return;
 
-    const civ = await member.guild.roles.cache.find(role => role.name === "Civ");
-    const taskDesignators = await member.guild.roles.cache.find(role => role.name === "-------- Task Designators --------");
-    const administrative = await member.guild.roles.cache.find(role => role.name === "--------- Administrative ---------");
+    const civ = member.guild.roles.cache.find(role => role.name === "Civ");
+    const taskDesignators = member.guild.roles.cache.find(role => role.name === "-------- Task Designators --------");
+    const administrative = member.guild.roles.cache.find(role => role.name === "--------- Administrative ---------");
 
     member.roles.add(civ);
     member.roles.add(taskDesignators);
