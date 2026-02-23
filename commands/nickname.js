@@ -21,6 +21,13 @@ module.exports = {
 		const interacterId = interaction.user.id;
         const nickname = interaction.options.getString('nickname') ?? 'ERR%R';
 
+        if (nickname.lenght > 20) {
+            interaction.reply({
+                content: `Nickname should be shorter then 20 characters`
+            })
+            return;
+        }
+
         // User ----------------
         
         const userSelect = new UserSelectMenuBuilder()

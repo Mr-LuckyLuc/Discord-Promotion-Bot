@@ -1,0 +1,11 @@
+{
+    "title": "1st Light Cavalery Company",
+    "image": "https://cdn.discordapp.com/attachments/1467595806419849219/1469732485339545690/K3_logo.webp",
+    "company leaders": ["Captain"],
+    "company staff": ["First Sergeant"],
+    "platoon leaders": ["Lieutenant"],
+    "company staff": ["Sergeant", "Corporal"],
+    "seperated units": ["Motala Helicopter Squadron, 1st", "Motala Helicopter Squadron, 2nd"],
+    "seperated careers": ["Vehicle Specialist"],
+    "seperated leaders": ["Lieutenant"],
+}
