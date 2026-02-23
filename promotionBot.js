@@ -12,61 +12,20 @@ const { updateMessage } = require("./message");
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers], autoReconnect: true });
 
-// Construct and prepare an instance of the REST module
+client.files = {};
+client.files.ranks = "./files/ranks.json";
+client.files.units = "./files/units.json";
+client.files.careers = "./files/careers.json";
+// client.files.awards = "./files/awards.json";
+client.files.enlisted = "./files/enlisted.json";
+
 let ranks = {};
-
-fs.readFile("./ranks.txt", "utf8", (err,data) => {
-    if(err){
-        console.error(err);
-    }else{
-        ranks = JSON.parse(data);
-        client.ranks = ranks;
-    }
-});
-
 let units = {};
-
-fs.readFile("./units.txt", "utf8", (err,data) => {
-    if(err){
-        console.error(err);
-    }else{
-        units = JSON.parse(data);
-        client.units = units;
-    }
-});
-
 let careers = {};
-
-fs.readFile("./careers.txt", "utf8", (err,data) => {
-    if(err){
-        console.error(err);
-    }else{
-        careers = JSON.parse(data);
-        client.careers = careers;
-    }
-});
-
 // let awards = [];
-
-// fs.readFile("./awards.txt", "utf8", (err,data) => {
-//     if(err){
-//         console.error(err);
-//     }else{
-//         awards = data.split(",");
-//         client.awards = awards;
-//     }
-// });
-
 let enlisted = {};
 
-fs.readFile("./enlisted.txt", "utf-8", (err, data) => {
-    if (err) {
-        console.error(err)
-    } else {
-        enlisted = JSON.parse(data);
-        client.enlisted = enlisted;
-    }
-})
+reloadFiles()
 
 const commandsPath = path.join(__dirname, "commands");
 const commandsFiles = fs.readdirSync(commandsPath);
@@ -112,7 +71,7 @@ client.on('guildMemberAdd', member => {
         
         enlisted[member.id] = enlistee;
 
-        fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
+        fs.writeFile(client.files.enlisted, JSON.stringify(enlisted), (err) => {
             if(err){
                 console.log(Date.now());
                 console.log(err);
@@ -134,7 +93,7 @@ client.on('guildMemberRemove', member => {
     enlistee.active = false;
     enlisted[member.id] = enlistee;
 
-    fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
+    fs.writeFile(client.files.enlisted, JSON.stringify(enlisted), (err) => {
         if(err){
             console.log(Date.now());
             console.log(err);
@@ -231,7 +190,7 @@ client.on('ready', async() => {
 
         client.enlisted = enlisted;
 
-        fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
+        fs.writeFile(client.files.enlisted, JSON.stringify(enlisted), (err) => {
             if(err){
                 console.log(Date.now());
                 console.log(err);
@@ -241,3 +200,56 @@ client.on('ready', async() => {
         });
     }
 });
+
+function reloadFiles() {
+
+    fs.readFile(client.files.ranks, "utf8", (err,data) => {
+        if(err){
+            console.error(err);
+        }else{
+            ranks = JSON.parse(data);
+            client.ranks = ranks;
+        }
+    });
+
+    fs.readFile(client.files.ranks, "utf8", (err,data) => {
+        if(err){
+            console.error(err);
+        }else{
+            units = JSON.parse(data);
+            client.units = units;
+        }
+    });
+
+    fs.readFile(client.files.ranks, "utf8", (err,data) => {
+        if(err){
+            console.error(err);
+        }else{
+            careers = JSON.parse(data);
+            client.careers = careers;
+        }
+    });
+
+    // fs.readFile(client.files.awards, "utf8", (err,data) => {
+    //     if(err){
+    //         console.error(err);
+    //     }else{
+    //         awards = data.split(",");
+    //         client.awards = awards;
+    //     }
+    // });
+
+    fs.readFile(client.files.enlisted, "utf-8", (err, data) => {
+        if (err) {
+            console.error(err)
+        } else {
+            enlisted = JSON.parse(data);
+            client.enlisted = enlisted;
+        }
+    })
+
+}
+
+module.exports = {
+    reloadFiles
+};

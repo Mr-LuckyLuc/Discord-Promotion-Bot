@@ -120,7 +120,7 @@ module.exports = {
                             enlistee.active = true;
                             enlisted[enlisteeId] = enlistee;
                     
-                            fs.writeFile("./enlisted.txt", JSON.stringify(enlisted), (err) => {
+                            fs.writeFile(client.files.enlisted, JSON.stringify(enlisted), (err) => {
                                 if(err){
                                     console.log(Date.now());
                                     console.log(err);
