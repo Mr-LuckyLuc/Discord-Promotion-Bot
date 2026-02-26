@@ -56,9 +56,11 @@ client.on('guildMemberAdd', member => {
     
     if (member.user.bot) return;
 
-    const ranks = client.ranks[guild.id]
-    const units = client.units[guild.id]
-    const careers = client.careers[guild.id]
+    const guild = member.guild;
+
+    const ranks = client.ranks[guild.id];
+    const units = client.units[guild.id];
+    const careers = client.careers[guild.id];
     
     let enlistee = {};
 
@@ -72,7 +74,7 @@ client.on('guildMemberAdd', member => {
         
         client.enlisted[member.guild.id][member.id] = enlistee;
 
-        updateEnlisted()
+        updateEnlisted("person joined")
     }
 });
 
