@@ -19,7 +19,7 @@ module.exports = {
     	const client = interaction.client;
 
 		if (visible) {
-			const channel = await interaction.member.guild.channels.fetch(interaction.channelId);
+			const channel = await interaction.guild.channels.fetch(interaction.channelId);
 
 			const myEmbed = new EmbedBuilder()
 				.setColor(0x0099ff)

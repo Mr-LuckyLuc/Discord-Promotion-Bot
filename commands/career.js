@@ -1,7 +1,7 @@
 const {StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, UserSelectMenuBuilder} = require('discord.js');
 
-const fs = require('node:fs');
 const { updateMessage } = require('../message');
+const { unpackInteraction, updateEnlisted } = require('../functions');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -9,11 +9,8 @@ module.exports = {
 		.setDescription('assign somebody to a career!'),
         
 	async execute(interaction) {
-        const client = interaction.client;
-        const careers = client.careers;
-        const enlisted = client.enlisted;
-
-        const interacterId = interaction.member.user.id;
+        
+        const [client, , , careers, enlisted, guildId, interacterId] = unpackInteraction(interaction);
         
         // User ----------------
 
@@ -82,7 +79,7 @@ module.exports = {
                     return;
                 }
 
-                const oldcareer = interaction.guild.roles.cache.find(role => role.name === careers[enlistee.career]["role"]);
+                const oldcareer = interaction.guild.roles.cache.find(role => role.name === careers[enlistee.career]["career role"]);
 
                 userConfirmation.update({
                     content: `What career do you want to assign to?`,
@@ -105,16 +102,9 @@ module.exports = {
                             enlistee.career = career;
                             enlisted[enlisteeId] = enlistee;
                     
-                            fs.writeFile(client.files.enlisted, JSON.stringify(enlisted), (err) => {
-                                if(err){
-                                    console.log(Date.now());
-                                    console.log(err);
-                                }else{
-                                    console.log('career changed');
-                                }
-                            });
+                            updateEnlisted(enlisted, guildId, 'career changed');
                             
-                            const newCareer = await interaction.guild.roles.cache.find(role => role.name === careers[career]["role"]);
+                            const newCareer = await interaction.guild.roles.cache.find(role => role.name === careers[career]["career role"]);
                             
                             user.roles.remove(oldcareer);
                             user.roles.add(newCareer);

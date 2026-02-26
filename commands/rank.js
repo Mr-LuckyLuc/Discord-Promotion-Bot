@@ -1,8 +1,7 @@
 const {StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, UserSelectMenuBuilder} = require('discord.js');
-const { log } = require('node:console');
 
-const fs = require('node:fs');
 const { updateMessage } = require('../message');
+const { unpackInteraction, updateEnlisted, updateNickname } = require('../functions');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -10,12 +9,8 @@ module.exports = {
 		.setDescription('Promote somebody!'),
         
 	async execute(interaction) {
-        const client = interaction.client;
-        const ranks = client.ranks;
-        const units = client.units;
-        const enlisted = client.enlisted;
-
-        const interacterId = interaction.member.user.id;
+        
+        const [client, ranks, units, , enlisted, guildId, interacterId] = unpackInteraction(interaction);
         const promoterRank = enlisted[interacterId].rank;
         let underranked = false;
 
@@ -80,14 +75,14 @@ module.exports = {
 
             if (userConfirmation.customId === 'user') {
                 const enlisteeId = userConfirmation.values[0];
-                const user = await interaction.guild.members.fetch(enlisteeId);
+                const member = await interaction.guild.members.fetch(enlisteeId);
 
                 if (enlisteeId == interaction.guild.ownerId) {
                     await userConfirmation.update({content: "No permission to change this soldier (server owner)", components: []});
                     return;
                 }
                 
-                if (user.user.bot) {
+                if (member.user.bot) {
                     await userConfirmation.update({content: "No permission to change this soldier (bot)", components: []});
                     return;
                 }
@@ -120,14 +115,7 @@ module.exports = {
                             enlistee.active = true;
                             enlisted[enlisteeId] = enlistee;
                     
-                            fs.writeFile(client.files.enlisted, JSON.stringify(enlisted), (err) => {
-                                if(err){
-                                    console.log(Date.now());
-                                    console.log(err);
-                                }else{
-                                    console.log('rank changed');
-                                }
-                            });
+                            updateEnlisted(enlisted, guildId, 'rank changed');
                             
                             const newRank = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["rank role"]);
                             const newExtra = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["extra role"]);
@@ -135,20 +123,19 @@ module.exports = {
                             const K3 = await interaction.guild.roles.cache.find(role => role.name === "K3");
                             const civ = await interaction.guild.roles.cache.find(role => role.name === "Civ");
                             
-                            user.roles.remove(oldRank);
-                            user.roles.add(newRank);
+                            member.roles.remove(oldRank);
+                            member.roles.add(newRank);
 
-                            newStaffPermissions && user.roles.add(newStaffPermissions);
-                            oldStaffPermissions && user.roles.add(oldStaffPermissions);
+                            newStaffPermissions && member.roles.add(newStaffPermissions);
+                            oldStaffPermissions && member.roles.add(oldStaffPermissions);
 
-                            user.roles.remove(oldExtra);
-                            user.roles.add(newExtra);
+                            member.roles.remove(oldExtra);
+                            member.roles.add(newExtra);
 
-                            user.roles.add(K3);
-                            user.roles.remove(civ);
+                            member.roles.add(K3);
+                            member.roles.remove(civ);
 
-                            await user.setNickname(units[enlisted[enlisteeId].unit]["unit tag"] + ' ' + ranks[rank]["rank tag"] + ' ' + enlisted[enlisteeId].nickname);
-
+                            updateNickname(member);
                             updateMessage(client);
 
                             rankConfirmation.update({

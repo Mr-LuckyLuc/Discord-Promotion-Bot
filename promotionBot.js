@@ -7,6 +7,7 @@ const fs = require('node:fs');
 
 const { Client, Collection, Events, GatewayIntentBits, REST, Routes} = require('discord.js');
 const { updateMessage } = require("./message");
+const { updateClient, updateEnlisted, reloadFiles } = require("./functions");
 
 // setup ----------------------------------------------
 
@@ -19,12 +20,7 @@ client.files.careers = "./files/careers.json";
 // client.files.awards = "./files/awards.json";
 client.files.enlisted = "./files/enlisted.json";
 
-let ranks = {};
-let units = {};
-let careers = {};
-// let awards = [];
-let enlisted = {};
-
+updateClient(client)
 reloadFiles()
 
 const commandsPath = path.join(__dirname, "commands");
@@ -59,6 +55,10 @@ const rest = new REST().setToken(process.env.TOKEN);
 client.on('guildMemberAdd', member => {
     
     if (member.user.bot) return;
+
+    const ranks = client.ranks[guild.id]
+    const units = client.units[guild.id]
+    const careers = client.careers[guild.id]
     
     let enlistee = {};
 
@@ -68,39 +68,21 @@ client.on('guildMemberAdd', member => {
         enlistee.rank = Object.keys(ranks)[0];
         enlistee.unit = Object.keys(units)[0];
         enlistee.career = Object.keys(careers)[0];
+        enlistee.active = false;
         
-        enlisted[member.id] = enlistee;
+        client.enlisted[member.guild.id][member.id] = enlistee;
 
-        fs.writeFile(client.files.enlisted, JSON.stringify(enlisted), (err) => {
-            if(err){
-                console.log(Date.now());
-                console.log(err);
-            }else{
-                console.log('person joined');
-            }
-        });
-
-        client.enlisted = enlisted;
+        updateEnlisted()
     }
 });
 
 client.on('guildMemberRemove', member => {
     
     if (member.user.bot) return;
-                
-    const enlistee = enlisted[member.id];
-    
-    enlistee.active = false;
-    enlisted[member.id] = enlistee;
 
-    fs.writeFile(client.files.enlisted, JSON.stringify(enlisted), (err) => {
-        if(err){
-            console.log(Date.now());
-            console.log(err);
-        }else{
-            console.log('person left');
-        }
-    });
+    enlisted[member.guild.id][member.id].active = false;
+
+    updateEnlisted('person left');
 
     updateMessage(client);
 
@@ -124,132 +106,81 @@ client.on(Events.InteractionCreate, (interaction) => {
 client.login(process.env.TOKEN);
 
 client.on('ready', async() => {
-    const guild = client.guilds.cache.get(process.env.GUILDID);
+    for (const guildArr of client.guilds.cache) {
+        const guild = guildArr[1]
+        let ranks = client.ranks[guild.id]
+        let units = client.units[guild.id]
+        let careers = client.careers[guild.id]
+        let enlisted = client.enlisted[guild.id]
 
-    if (Object.keys(enlisted).length === 0) {
-        const members = await guild.members.fetch();
+        if (!enlisted) enlisted = {};
+        if (!ranks) ranks = {};
+        if (!units) units = {};
+        if (!careers) careers = {};
 
-        const rankList = Object.fromEntries(Object.entries(ranks).map(([i, rank])=> {
-            return [rank["rank role"], i];
-        }));
-        const unitList = Object.fromEntries(Object.entries(units).map(([i, unit])=> {
-            return [unit["extra role"]?unit["extra role"]:unit["unit role"], i];
-        }));
-        const careerList = Object.fromEntries(Object.entries(careers).map(([i, career])=> {
-            return [career["role"], i];
-        }));
+        if (Object.keys(enlisted).length === 0) {
+            const members = await guild.members.fetch();
 
-        members.forEach(member => {
-            if (!member.user.bot) {
-                let enlistee = {};
+            const rankList = Object.fromEntries(Object.entries(ranks).map(([i, rank])=> {
+                return [rank["rank role"], i];
+            }));
+            const unitList = Object.fromEntries(Object.entries(units).map(([i, unit])=> {
+                return [unit["extra role"]?unit["extra role"]:unit["unit role"], i];
+            }));
+            const careerList = Object.fromEntries(Object.entries(careers).map(([i, career])=> {
+                return [career["role"], i];
+            }));
 
-                enlistee.rank = Object.keys(ranks)[0];
-                enlistee.unit = Object.keys(units)[0];
-                enlistee.career = Object.keys(careers)[0];
-                enlistee.active = false;
+            members.forEach(member => {
+                if (!member.user.bot) {
+                    let enlistee = {};
 
-                if (member.id === guild.ownerId) enlistee.rank = Object.keys(ranks)[Object.keys(ranks).length - 1];
+                    enlistee.rank = Object.keys(ranks)[0];
+                    enlistee.unit = Object.keys(units)[0];
+                    enlistee.career = Object.keys(careers)[0];
+                    enlistee.active = false;
 
-                enlisted[member.id] = enlistee;
+                    if (member.id === guild.ownerId) enlistee.rank = Object.keys(ranks)[Object.keys(ranks).length - 1];
 
-                enlisted[member.user.id].nickname = member.nickname?member.nickname.slice(9).trim():member.user.globalName.slice(0,25).trim();
+                    enlisted[member.id] = enlistee;
 
-                const roles = member.roles.cache;
-                
-                roles.forEach(role => {
+                    enlisted[member.user.id].nickname = member.nickname?member.nickname.slice(9).trim():member.user.globalName.slice(0,25).trim();
 
-                    if (role.name in rankList) {
-                        Object.entries(rankList).forEach( ([i, rank]) => {
-                            if (i === role.name) {
-                                enlisted[member.user.id].rank = rank;
-                            }
-                        })
-                    }
-                    if (role.name in unitList) {
-                        Object.entries(unitList).forEach( ([i, unit]) => {
-                            if (i === role.name) {
-                                enlisted[member.user.id].unit = unit;
-                            }
-                        })
-                    }
-                    if (role.name in careerList) {
-                        Object.entries(careerList).forEach( ([i, career]) => {
-                            if (i === role.name) {
-                                enlisted[member.user.id].career = career;
-                            }
-                        })
-                    }
-                    if ("K3" === role.name) {
-                        enlisted[member.user.id].active = true;
-                    }
-                });
-        
-                console.log('person added');
-            }
-        }); 
+                    const roles = member.roles.cache;
+                    
+                    roles.forEach(role => {
 
-        client.enlisted = enlisted;
+                        if (role.name in rankList) {
+                            Object.entries(rankList).forEach( ([i, rank]) => {
+                                if (i === role.name) {
+                                    enlisted[member.user.id].rank = rank;
+                                }
+                            })
+                        }
+                        if (role.name in unitList) {
+                            Object.entries(unitList).forEach( ([i, unit]) => {
+                                if (i === role.name) {
+                                    enlisted[member.user.id].unit = unit;
+                                }
+                            })
+                        }
+                        if (role.name in careerList) {
+                            Object.entries(careerList).forEach( ([i, career]) => {
+                                if (i === role.name) {
+                                    enlisted[member.user.id].career = career;
+                                }
+                            })
+                        }
+                        if ("K3" === role.name) {
+                            enlisted[member.user.id].active = true;
+                        }
+                    });
+                }
+            }); 
 
-        fs.writeFile(client.files.enlisted, JSON.stringify(enlisted), (err) => {
-            if(err){
-                console.log(Date.now());
-                console.log(err);
-            }else{
-                console.log('Loaded');
-            }
-        });
+            client.enlisted[guild.id] = enlisted;
+
+            updateEnlisted('loaded');
+        }
     }
 });
-
-function reloadFiles() {
-
-    fs.readFile(client.files.ranks, "utf8", (err,data) => {
-        if(err){
-            console.error(err);
-        }else{
-            ranks = JSON.parse(data);
-            client.ranks = ranks;
-        }
-    });
-
-    fs.readFile(client.files.ranks, "utf8", (err,data) => {
-        if(err){
-            console.error(err);
-        }else{
-            units = JSON.parse(data);
-            client.units = units;
-        }
-    });
-
-    fs.readFile(client.files.ranks, "utf8", (err,data) => {
-        if(err){
-            console.error(err);
-        }else{
-            careers = JSON.parse(data);
-            client.careers = careers;
-        }
-    });
-
-    // fs.readFile(client.files.awards, "utf8", (err,data) => {
-    //     if(err){
-    //         console.error(err);
-    //     }else{
-    //         awards = data.split(",");
-    //         client.awards = awards;
-    //     }
-    // });
-
-    fs.readFile(client.files.enlisted, "utf-8", (err, data) => {
-        if (err) {
-            console.error(err)
-        } else {
-            enlisted = JSON.parse(data);
-            client.enlisted = enlisted;
-        }
-    })
-
-}
-
-module.exports = {
-    reloadFiles
-};

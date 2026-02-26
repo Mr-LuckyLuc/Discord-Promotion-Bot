@@ -1,7 +1,7 @@
 const {ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, UserSelectMenuBuilder} = require('discord.js');
 
-const fs = require('node:fs');
 const { updateMessage } = require('../message');
+const { unpackInteraction, updateEnlisted } = require('../functions');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -10,13 +10,7 @@ module.exports = {
         
 	async execute(interaction) {
 
-        const client = interaction.client;
-        const ranks = client.ranks;
-        const units = client.units;
-        const careers = client.careers;
-        const enlisted = client.enlisted;
-
-        const interacterId = interaction.member.user.id;
+        const [client, ranks, units, careers, enlisted, guildId, interacterId] = unpackInteraction(interaction);
 
         // User ----------------
 
@@ -66,21 +60,14 @@ module.exports = {
                 enlistee.active = true;
                 enlisted[enlisteeId] = enlistee;
         
-                fs.writeFile(client.files.enlisted, JSON.stringify(enlisted), (err) => {
-                    if(err){
-                        console.log(Date.now());
-                        console.log(err);
-                    }else{
-                        console.log('enlisted');
-                    }
-                });
+                updateEnlisted(enlisted, guildId, 'enlisted');
 
                 const rank = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["rank role"]);
                 const rankExtra = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["extra role"]);
                 const staffPermissions = ranks[enlistee.rank]["staff permissions"]!=="" ? interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["staff permissions"]) : undefined;
                 const unit = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["unit role"]);
                 const unitExtra = units[enlistee.unit]["extra role"]!=="" ? interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra role"]) : undefined;
-                const career = interaction.guild.roles.cache.find(role => role.name === careers[enlistee.career]["role"]);
+                const career = interaction.guild.roles.cache.find(role => role.name === careers[enlistee.career]["career role"]);
                 const K3 = interaction.guild.roles.cache.find(role => role.name === "K3");
                 const civ = interaction.guild.roles.cache.find(role => role.name === "Civ");
 

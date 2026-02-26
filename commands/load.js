@@ -1,7 +1,7 @@
 const {SlashCommandBuilder, MessageFlags} = require('discord.js');
 
-const fs = require('node:fs');
 const { updateMessage } = require('../message');
+const { unpackInteraction, updateEnlisted } = require('../functions');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -12,11 +12,9 @@ module.exports = {
 
         await interaction.deferReply();
 
-        const client = interaction.client;
-        const ranks = client.ranks;
-        const units = client.units;
-        const careers = client.careers;
-        const members = await interaction.member.guild.members.fetch();
+        const [client, ranks, units, careers, , guildId,  ] = unpackInteraction(interaction);
+
+        const members = await interaction.guild.members.fetch();
 
         const rankList = Object.fromEntries(Object.entries(ranks).map(([i, rank])=> {
             return [rank["rank role"], i];
@@ -78,20 +76,11 @@ module.exports = {
         
                 console.log('person added');
             }
-        }); 
-
-        client.enlisted = enlisted
-
-        fs.writeFile(client.files.enlisted, JSON.stringify(enlisted), (err) => {
-            if(err){
-                console.log(Date.now());
-                console.log(err);
-            }else{
-                console.log('Loaded');
-            }
         });
+
+        updateEnlisted(enlisted, guildId, 'loaded');
         updateMessage(client)
+        
         interaction.editReply({content: "Loaded", flags: MessageFlags.Ephemeral});
-        console.log('Loaded!');
 	}
 }

@@ -1,6 +1,7 @@
 const {ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, UserSelectMenuBuilder} = require('discord.js');
 
-const fs = require('node:fs');
+const { unpackInteraction } = require('../functions');
+const { updateEnlisted } = require('../functions');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -12,13 +13,9 @@ module.exports = {
             .setRequired(true)),
         
 	async execute(interaction) {
+        
+        const [, ranks, units, , enlisted, guildId, interacterId] = unpackInteraction(interaction);
 
-        const client = interaction.client;
-        const ranks = client.ranks;
-        const units = client.units;
-        const enlisted = client.enlisted;
-
-		const interacterId = interaction.user.id;
         const nickname = interaction.options.getString('nickname') ?? 'ERR%R';
 
         if (nickname.lenght > 20) {
@@ -79,17 +76,9 @@ module.exports = {
                 enlistee.nickname = nickname;
                 enlisted[enlisteeId] = enlistee;
 
-                fs.writeFile(client.files.enlisted, JSON.stringify(enlisted), (err) => {
-                    if(err){
-                        console.log(Date.now());
-                        console.log(err);
-                    }else{
-                        console.log('nickname changed');
-                    }
-                });
+                updateNickname(member);
+                updateEnlisted(enlisted, guildId, 'nickname changed');                
 
-                await user.setNickname(units[enlisted[enlisteeId].unit]["unit tag"] + ' ' + ranks[enlisted[enlisteeId].rank]["rank tag"] + ' ' + nickname);
-                
                 userConfirmation.update({
                     content: `Changed <@${enlisteeId}>'s (${oldNickname}) nickname to ${nickname}.`,
                     components: [],

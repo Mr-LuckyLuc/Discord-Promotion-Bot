@@ -1,7 +1,7 @@
 const {StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, UserSelectMenuBuilder} = require('discord.js');
 
-const fs = require('node:fs');
 const { updateMessage } = require('../message');
+const { unpackInteraction, updateEnlisted } = require('../functions');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -9,12 +9,8 @@ module.exports = {
 		.setDescription('assign somebody to a unit!'),
         
 	async execute(interaction) {
-        const client = interaction.client;
-        const ranks = client.ranks;
-        const units = client.units;
-        const enlisted = client.enlisted;
         
-        const interacterId = interaction.member.user.id;
+        const [client, ranks, units, , enlisted, guildId, interacterId] = unpackInteraction(interaction);
 
         // User ----------------
 
@@ -107,14 +103,7 @@ module.exports = {
                             enlistee.unit = unit;
                             enlisted[enlisteeId] = enlistee;
                     
-                            fs.writeFile(client.files.enlisted, JSON.stringify(enlisted), (err) => {
-                                if(err){
-                                    console.log(Date.now());
-                                    console.log(err);
-                                }else{
-                                    console.log('unit changed');
-                                }
-                            });
+                            updateEnlisted(enlisted, guildId, 'unit changed');
                             
                             const newUnit = await interaction.guild.roles.cache.find(role => role.name === units[unit]["unit role"]);
                             const newExtra = units[unit]["extra role"]!=="" ? interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra role"]) : undefined;
@@ -125,8 +114,7 @@ module.exports = {
                             oldExtra && user.roles.remove(oldExtra);
                             newExtra && user.roles.add(newExtra);
                             
-                            await user.setNickname(units[unit]["unit tag"] + ' ' + ranks[enlisted[enlisteeId].rank]["rank tag"] + ' ' + enlisted[enlisteeId].nickname);
-
+                            updateNickname(member);
                             updateMessage(client);
 
                             unitConfirmation.update({
