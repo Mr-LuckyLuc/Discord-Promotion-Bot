@@ -4,8 +4,6 @@ client = undefined;
 
 function updateClient(newClient) {
     client = newClient;
-    
-    console.log(client.files)
 }
 
 function unpackInteraction(interaction) {
@@ -98,6 +96,15 @@ function reloadFiles() {
         } else {
             enlisted = JSON.parse(data);
             client.enlisted = enlisted;
+        }
+    })
+
+    fs.readFile(client.files.stats, "utf-8", (err, data) => {
+        if (err) {
+            console.error(err)
+        } else {
+            stats = JSON.parse(data);
+            client.stats = stats;
         }
     })
 

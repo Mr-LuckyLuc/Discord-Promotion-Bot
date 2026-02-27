@@ -1,5 +1,5 @@
 const {SlashCommandBuilder, MessageFlags, EmbedBuilder} = require('discord.js');
-const { updateMessage } = require('../message');
+const { updateMessage } = require('../newMessage');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -30,7 +30,7 @@ module.exports = {
 			client.message = msg
 		}
 
-		const message = updateMessage(client);
+		const message = updateMessage(interaction);
 
 		if (!visible) await interaction.editReply({ content: message, flags: MessageFlags.Ephemeral });
 		console.log(`${visible?"Publicly":"Privatly"} displaying stats`);

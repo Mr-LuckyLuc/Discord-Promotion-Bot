@@ -19,6 +19,7 @@ client.files.units = "./files/units.json";
 client.files.careers = "./files/careers.json";
 // client.files.awards = "./files/awards.json";
 client.files.enlisted = "./files/enlisted.json";
+client.files.stats = "./files/stats.json";
 
 updateClient(client)
 reloadFiles()
@@ -175,15 +176,17 @@ client.on('ready', async() => {
                         }
                     });
 
-                    const unitLength = units[enlisted[userId].unit]["unit tag"].length;
-                    const rankLength = ranks[enlisted[userId].rank]["rank tag"].length;
-                    const length = unitLength?unitLength+1:0 + rankLength?rankLength+1:0;
+                    // const unitLength = units[enlisted[userId].unit]["unit tag"].length;
+                    // const rankLength = ranks[enlisted[userId].rank]["rank tag"].length;
+                    // const length = unitLength?unitLength+1:0 + rankLength?rankLength+1:0;
                     
-                    const unitLengths = Object.entries(units).map( unit => unit["unit tag"].length);
-                    const rankLengths = Object.entries(ranks).map( rank => rank["rank tag"].length);
+                    const unitLengths = Object.values(units).map( unit => unit["unit tag"].length);
+                    const rankLengths = Object.values(ranks).map( rank => rank["rank tag"].length);
                     const maxLength = Math.max(unitLengths) + Math.max(rankLengths);
                     
-                    enlisted[userId].nickname = member.nickname?member.nickname.slice(length).trim():member.user.globalName.slice(0,32-maxLength).trim();
+                    // const nickname = member.nickname?member.nickname.slice(length).trim():member.user.globalName;
+                    const nickname = member.user.globalName;
+                    enlisted[userId].nickname = nickname.slice(-32+maxLength).trim();
                 }
             }); 
 

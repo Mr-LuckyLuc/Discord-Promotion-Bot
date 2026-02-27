@@ -44,7 +44,7 @@ module.exports = {
 
 		switch (command) {
 			case 'rank':
-				for (const rank in Object.keys(newJSON)) {
+				for (const rank in Object.values(newJSON)) {
 					if (Object.keys(rank).includes(["rank tag", "rank role", "extra role", "staff permissions"])) {
             			await interaction.editReply({ content: "Missing correct entries, does it include all of the following:\nrank tag, rank role, extra role, staff permissions", flags: MessageFlags.Ephemeral});
 						return;
@@ -61,7 +61,7 @@ module.exports = {
 				});
 				break;
 			case 'unit':
-				for (const unit in Object.entries(newJSON)) {
+				for (const unit in Object.values(newJSON)) {
 					if (Object.keys(unit).includes(["unit tag", "unit role", "extra role", "display name"])) {
             			await interaction.editReply({ content: "Missing correct entries, does it include all of the following:\nunit tag, unit role, extra role, display name", flags: MessageFlags.Ephemeral});
 						return;
@@ -78,7 +78,7 @@ module.exports = {
 				});
 				break;
 			case 'career':
-				for (const career in Object.entries(newJSON)) {
+				for (const career in Object.values(newJSON)) {
 					if (Object.keys(career).includes(["career role", "display name"])) {
             			await interaction.editReply({ content: "Missing correct entries, does it include all of the following:\ncareer role, display name", flags: MessageFlags.Ephemeral});
 						return;

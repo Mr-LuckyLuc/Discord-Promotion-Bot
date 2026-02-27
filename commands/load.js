@@ -1,6 +1,6 @@
 const {SlashCommandBuilder, MessageFlags} = require('discord.js');
 
-const { updateMessage } = require('../message');
+const { updateMessage } = require('../newMessage');
 const { unpackInteraction, updateEnlisted } = require('../functions');
 
 module.exports = {
@@ -70,17 +70,18 @@ module.exports = {
                     }
 
                 });
-                const unitLength = units[enlisted[userId].unit]["unit tag"].length;
-                const rankLength = ranks[enlisted[userId].rank]["rank tag"].length;
-                const length = unitLength?unitLength+1:0 + rankLength?rankLength+1:0;
 
-                const unitLengths = Object.entries(units).map( unit => unit["unit tag"].length);
-                const rankLengths = Object.entries(ranks).map( rank => rank["rank tag"].length);
+                // const unitLength = units[enlisted[userId].unit]["unit tag"].length;
+                // const rankLength = ranks[enlisted[userId].rank]["rank tag"].length;
+                // const length = unitLength?unitLength+1:0 + rankLength?rankLength+1:0;
+                
+                const unitLengths = Object.values(units).map( unit => unit["unit tag"].length);
+                const rankLengths = Object.values(ranks).map( rank => rank["rank tag"].length);
                 const maxLength = Math.max(unitLengths) + Math.max(rankLengths);
                 
-                enlisted[userId].nickname = member.nickname?member.nickname.slice(length).trim():member.user.globalName.slice(0,32-maxLength).trim();
-        
-                console.log('person added');
+                // const nickname = member.nickname?member.nickname.slice(length).trim():member.user.globalName;
+                const nickname = member.user.globalName;
+                enlisted[userId].nickname = nickname.slice(-32+maxLength).trim();
             }
         });
 
