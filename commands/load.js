@@ -11,7 +11,6 @@ module.exports = {
 	async execute(interaction) {
 
         await interaction.deferReply();
-        console.log(interaction)
 
         const [client, ranks, units, careers, , , guildId,  ] = unpackInteraction(interaction);
 

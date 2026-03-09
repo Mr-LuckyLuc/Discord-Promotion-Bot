@@ -33,7 +33,6 @@ function updateMessage(interaction) {
                     list += `- <@${person.id}>\n`;
                 }
                 message += list;
-                console.log(subsection.name);
                 
                 embed.addFields({name: subsection.name, value: list || " "});
             }
