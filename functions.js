@@ -8,33 +8,51 @@ function updateClient(newClient) {
 
 function unpackInteraction(interaction) {
     const client = interaction.client;
-    const guildId = interaction.guild.id
+    const guildId = interaction.guild.id;
     const ranks = client.ranks[guildId];
     const units = client.units[guildId];
     const careers = client.careers[guildId];
     const enlisted = client.enlisted[guildId];
+    const settings = client.settings[guildId];
     const interacterId = interaction.member.user.id;
 
-    return [client, ranks, units, careers, enlisted, guildId, interacterId]
+    return [client, ranks, units, careers, settings, enlisted, guildId, interacterId];
 }
 
 function updateNickname(member) {
     const userId = member.user.id;
     const guildId = member.guild.id;
     const enlisted = client.enlisted[guildId];
+    const settings = client.settings[guildId];
     
     const rank = enlisted[userId].rank;
     const unit = enlisted[userId].unit;
+    const career = enlisted[userId].career;
 
     const ranks = client.ranks[guildId];
     const units = client.units[guildId];
+    const careers = client.careers[guildId];
 
     const rankTag = ranks[rank]["rank tag"]
-    const unitTag = units[unit]["rank tag"]
+    const unitTag = units[unit]["unit tag"]
+    const careerTag = careers[career]["career tag"]
 
     let nickname = "";
-    nickname += rankTag ? rankTag + " " : "";
-    nickname += unitTag ? unitTag + " " : "";
+
+    for (const prefix of settings["nickname prefixes"]) {
+        switch (prefix) {
+            case "rank":
+                nickname += rankTag ? rankTag + " " : ""
+                break;
+            case "unit":
+                nickname += unitTag ? unitTag + " " : ""
+                break;
+            case "career":
+                nickname += careerTag ? careerTag + " " : ""
+                break;
+        }
+    }
+
     nickname += enlisted[userId].nickname;
 
     member.setNickname(nickname);
@@ -96,6 +114,15 @@ function reloadFiles() {
         } else {
             enlisted = JSON.parse(data);
             client.enlisted = enlisted;
+        }
+    })
+
+    fs.readFile(client.files.settings, "utf-8", (err, data) => {
+        if (err) {
+            console.error(err)
+        } else {
+            settings = JSON.parse(data);
+            client.settings = settings;
         }
     })
 

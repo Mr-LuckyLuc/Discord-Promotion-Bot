@@ -10,7 +10,7 @@ module.exports = {
         
 	async execute(interaction) {
         
-        const [client, ranks, units, , enlisted, guildId, interacterId] = unpackInteraction(interaction);
+        const [client, ranks, , , settings, enlisted, guildId, interacterId] = unpackInteraction(interaction);
         const promoterRank = enlisted[interacterId].rank;
         let underranked = false;
 

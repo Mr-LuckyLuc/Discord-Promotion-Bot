@@ -14,7 +14,7 @@ module.exports = {
         
 	async execute(interaction) {
         
-        const [, ranks, units, , enlisted, guildId, interacterId] = unpackInteraction(interaction);
+        const [ , , , , , enlisted, guildId, interacterId] = unpackInteraction(interaction);
 
         const nickname = interaction.options.getString('nickname') ?? 'ERR%R';
 

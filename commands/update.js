@@ -13,13 +13,14 @@ module.exports = {
 			.setDescription('The JSON structured text to update the role assignment')
 		)
         .addStringOption((option) => option
-			.setName('command')
+			.setName('option')
             .setRequired(true)
-			.setDescription('The command to update with these settings')
+			.setDescription('The setting to update with these settings')
             .addChoices(
                 {name: "rank", value: "rank"},
                 {name: "unit", value: "unit"},
                 {name: "career", value: "career"},
+                {name: "settings", value: "settings"},
             )
 		),
         
@@ -27,7 +28,7 @@ module.exports = {
 
         await interaction.deferReply()
 		
-		const command = interaction.options.getString('command');
+		const option = interaction.options.getString('option');
 		const textJSON = interaction.options.getString('settings') ?? "";
 		let newJSON;
 
@@ -42,7 +43,7 @@ module.exports = {
 			return;
         }
 
-		switch (command) {
+		switch (option) {
 			case 'rank':
 				for (const rank in Object.values(newJSON)) {
 					if (Object.keys(rank).includes(["rank tag", "rank role", "extra role", "staff permissions"])) {
@@ -94,11 +95,26 @@ module.exports = {
 					}
 				});
 				break;
+			case 'settings':
+				if (Object.keys(settings).includes(["civilian role", "empolyee role", "autoroles", "nickname prefixes"])) {
+					await interaction.editReply({ content: "Missing correct entries, does it include all of the following:\civilian role, employee name, autorole, nickname prefixes", flags: MessageFlags.Ephemeral});
+					return;
+				}
+				client.settings[guildId] = newJSON;
+				fs.writeFile(client.files.settings, JSON.stringify(client.settings, null, 4), (err) => {
+					if(err){
+						console.log(Date.now());
+						console.log(err);
+					}else{
+						console.log("careers updated");
+					}
+				});
+				break;
 		}
 
 		reloadFiles();
 
-        await interaction.editReply({ content: `Updated ${command}s role assignment`, flags: MessageFlags.Ephemeral }); 
+        await interaction.editReply({ content: `Updated ${option}s role assignment`, flags: MessageFlags.Ephemeral }); 
 		
 	}
 }

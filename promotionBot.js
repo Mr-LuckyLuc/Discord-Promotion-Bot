@@ -19,6 +19,7 @@ client.files.units = "./files/units.json";
 client.files.careers = "./files/careers.json";
 // client.files.awards = "./files/awards.json";
 client.files.enlisted = "./files/enlisted.json";
+client.files.settings = "./files/settings.json";
 client.files.stats = "./files/stats.json";
 
 updateClient(client)

@@ -10,7 +10,7 @@ module.exports = {
         
 	async execute(interaction) {
         
-        const [client, ranks, units, careers, enlisted, guildId, interacterId] = unpackInteraction(interaction);
+        const [client, ranks, units, careers, settings, enlisted, guildId, interacterId] = unpackInteraction(interaction);
 
         // User ----------------
 
@@ -68,8 +68,8 @@ module.exports = {
                 const oldUnit = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["unit role"]);
                 const oldUnitExtra = units[enlistee.unit]["extra role"]!=="" ? interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra role"]) : undefined;
                 const oldCareer = interaction.guild.roles.cache.find(role => role.name === careers[enlistee.career]["career role"]);
-                const K3 = interaction.guild.roles.cache.find(role => role.name === "K3");
-                const civ = interaction.guild.roles.cache.find(role => role.name === "Civ");
+                const employee = interaction.guild.roles.cache.find(role => role.name === settings["employee role"]);
+                const civ = interaction.guild.roles.cache.find(role => role.name === settings["civilian role"]);
 
                 user.roles.remove(oldRank);
                 user.roles.remove(oldRankExtra);
@@ -77,7 +77,7 @@ module.exports = {
                 user.roles.remove(oldUnit);
                 oldUnitExtra && user.roles.remove(oldUnitExtra);
                 user.roles.remove(oldCareer);
-                user.roles.remove(K3);
+                user.roles.remove(employee);
                 user.roles.add(civ);
 
                 await user.setNickname(enlisted[enlisteeId].nickname);

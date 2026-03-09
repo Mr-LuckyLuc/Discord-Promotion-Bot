@@ -12,7 +12,7 @@ module.exports = {
 
         await interaction.deferReply();
 
-        const [client, ranks, units, careers, , guildId,  ] = unpackInteraction(interaction);
+        const [client, ranks, units, careers, settings, , guildId,  ] = unpackInteraction(interaction);
 
         const members = await interaction.guild.members.fetch();
 
