@@ -39,7 +39,7 @@ module.exports = {
         try {
             newJSON = JSON.parse(textJSON);
         } catch {
-            interaction.reply("Couldn't parse json, check your json structuring");
+            interaction.editReply("Couldn't parse json, check your json structuring");
 			return;
         }
 

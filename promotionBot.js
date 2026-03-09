@@ -189,11 +189,9 @@ client.on('ready', async() => {
                     const nickname = member.user.globalName;
                     enlisted[userId].nickname = nickname.slice(-32+maxLength).trim();
                 }
-            }); 
+            });
 
-            client.enlisted[guild.id] = enlisted;
-
-            updateEnlisted('loaded');
+            updateEnlisted(enlisted, guild.id, "loaded");
         }
     }
 });
