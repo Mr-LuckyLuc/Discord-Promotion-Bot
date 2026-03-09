@@ -9,9 +9,10 @@ module.exports = {
             .setRequired(true)
 			.setDescription('The option to show the settings of.')
             .addChoices(
-                {name: "rank", value: "rank"},
-                {name: "unit", value: "unit"},
-                {name: "career", value: "career"},
+                {name: "rank", value: "ranks"},
+                {name: "unit", value: "units"},
+                {name: "career", value: "careers"},
+                {name: "stats", value: "stats"},
                 {name: "settings", value: "settings"},
             )
 		),
