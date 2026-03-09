@@ -186,7 +186,7 @@ client.on('ready', async() => {
                     const maxLength = Math.max(unitLengths) + Math.max(rankLengths);
                     
                     // const nickname = member.nickname?member.nickname.slice(length).trim():member.user.globalName;
-                    const nickname = member.user.globalName;
+                    const nickname = member.nickname || member.user.username || member.user.globalName;
                     enlisted[userId].nickname = nickname.slice(-32+maxLength).trim();
                 }
             });
