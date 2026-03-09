@@ -20,7 +20,7 @@ module.exports = {
 
 		const option = interaction.options.getString('option');
 
-        await interaction.reply({ content: JSON.stringify(client[interaction.guild.id][option]), flags: MessageFlags.Ephemeral }); 
+        await interaction.reply({ content: JSON.stringify(client[option][interaction.guild.id]), flags: MessageFlags.Ephemeral }); 
         
     }
 }
