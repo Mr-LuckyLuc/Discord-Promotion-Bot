@@ -8,7 +8,7 @@ function updateClient(newClient) {
 
 function unpackInteraction(interaction) {
     const client = interaction.client;
-    const guildId = interaction.guild.id;
+    const guildId = interaction.guildId;
     const ranks = client.ranks[guildId];
     const units = client.units[guildId];
     const careers = client.careers[guildId];

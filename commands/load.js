@@ -12,7 +12,7 @@ module.exports = {
 
         await interaction.deferReply();
 
-        const [client, ranks, units, careers, settings, , guildId,  ] = unpackInteraction(interaction);
+        const [client, ranks, units, careers, , , guildId,  ] = unpackInteraction(interaction);
 
         const members = await interaction.guild.members.fetch();
 
@@ -80,7 +80,7 @@ module.exports = {
                 const maxLength = Math.max(unitLengths) + Math.max(rankLengths);
                 
                 // const nickname = member.nickname?member.nickname.slice(length).trim():member.user.globalName;
-                const nickname = member.user.globalName;
+                const nickname = member.nickname || member.user.username || member.user.globalName;
                 enlisted[userId].nickname = nickname.slice(-32+maxLength).trim();
             }
         });
