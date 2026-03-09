@@ -136,7 +136,7 @@ module.exports = {
                             member.roles.remove(civ);
 
                             updateNickname(member);
-                            updateMessage(client);
+                            updateMessage(interaction);
 
                             rankConfirmation.update({
                                 content: `Changed <@${enlisteeId}>'s rank to ${rank}.`,

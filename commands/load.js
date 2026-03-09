@@ -11,10 +11,11 @@ module.exports = {
 	async execute(interaction) {
 
         await interaction.deferReply();
+        console.log(interaction)
 
         const [client, ranks, units, careers, , , guildId,  ] = unpackInteraction(interaction);
 
-        const members = await interaction.guild.members.fetch();
+        const members = await interaction.guild.members.cache;
 
         const rankList = Object.fromEntries(Object.entries(ranks).map(([i, rank])=> {
             return [rank["rank role"], i];
@@ -86,7 +87,7 @@ module.exports = {
         });
 
         updateEnlisted(enlisted, guildId, 'loaded');
-        updateMessage(client)
+        updateMessage(interaction);
         
         interaction.editReply({content: "Loaded", flags: MessageFlags.Ephemeral});
 	}

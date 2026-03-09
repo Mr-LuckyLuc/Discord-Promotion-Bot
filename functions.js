@@ -1,13 +1,12 @@
 const fs = require('node:fs');
 
-client = undefined;
+let client = undefined;
 
 function updateClient(newClient) {
     client = newClient;
 }
 
 function unpackInteraction(interaction) {
-    const client = interaction.client;
     const guildId = interaction.guildId;
     const ranks = client.ranks[guildId];
     const units = client.units[guildId];
@@ -21,7 +20,7 @@ function unpackInteraction(interaction) {
 
 function updateNickname(member) {
     const userId = member.user.id;
-    const guildId = member.guild.id;
+    const guildId = member.guildId;
     const enlisted = client.enlisted[guildId];
     const settings = client.settings[guildId];
     

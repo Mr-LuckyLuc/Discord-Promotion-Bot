@@ -82,7 +82,7 @@ module.exports = {
 
                 await user.setNickname(units[enlistee.unit]["unit tag"] + ' ' + ranks[enlistee.rank]["rank tag"] + ' ' + enlistee.nickname);
 
-                updateMessage(client);
+                updateMessage(interaction);
 
                 userConfirmation.update({
                     content: `Enlisted <@${enlisteeId}>.`,

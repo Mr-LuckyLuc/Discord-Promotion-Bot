@@ -109,7 +109,7 @@ module.exports = {
                             user.roles.remove(oldcareer);
                             user.roles.add(newCareer);
 
-                            updateMessage(client);
+                            updateMessage(interaction);
 
                             careerConfirmation.update({
                                 content: `Changed <@${enlisteeId}>'s career to ${career}.`,

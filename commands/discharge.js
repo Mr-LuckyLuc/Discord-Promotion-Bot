@@ -82,7 +82,7 @@ module.exports = {
 
                 await user.setNickname(enlisted[enlisteeId].nickname);
 
-                updateMessage(client);
+                updateMessage(interaction);
 
                 userConfirmation.update({
                     content: `Discharged <@${enlisteeId}>.`,

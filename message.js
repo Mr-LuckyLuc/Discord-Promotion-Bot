@@ -1,6 +1,6 @@
 const {EmbedBuilder} = require('discord.js');
 
-function updateMessage(client) {
+function updateMessage(interaction) {
     const enlisted = client.enlisted;
     const ranks = client.ranks;
     const units = client.units;

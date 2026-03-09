@@ -115,7 +115,7 @@ module.exports = {
                             newExtra && user.roles.add(newExtra);
                             
                             updateNickname(member);
-                            updateMessage(client);
+                            updateMessage(interaction);
 
                             unitConfirmation.update({
                                 content: `Changed <@${enlisteeId}>'s unit to ${unit}.`,

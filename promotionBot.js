@@ -88,7 +88,7 @@ client.on('guildMemberRemove', member => {
 
     updateEnlisted('person left');
 
-    updateMessage(client);
+    updateMessage(interaction);
 
 });
 
