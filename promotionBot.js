@@ -111,11 +111,12 @@ client.login(process.env.TOKEN);
 
 client.on('ready', async() => {
     for (const guildArr of client.guilds.cache) {
-        const guild = guildArr[1]
-        let ranks = client.ranks[guild.id]
-        let units = client.units[guild.id]
-        let careers = client.careers[guild.id]
-        let enlisted = client.enlisted[guild.id]
+        const guild = guildArr[1];
+        let ranks = client.ranks[guild.id];
+        let units = client.units[guild.id];
+        let careers = client.careers[guild.id];
+        let settings = client.settings[guild.id];
+        let enlisted = client.enlisted[guild.id];
 
         if (!enlisted) enlisted = {};
         if (!ranks) ranks = {};
@@ -129,10 +130,10 @@ client.on('ready', async() => {
                 return [rank["rank role"], i];
             }));
             const unitList = Object.fromEntries(Object.entries(units).map(([i, unit])=> {
-                return [unit["extra role"]?unit["extra role"]:unit["unit role"], i];
+                return [unit["unit role"], i];
             }));
             const careerList = Object.fromEntries(Object.entries(careers).map(([i, career])=> {
-                return [career["role"], i];
+                return [career["career role"], i];
             }));
 
             members.forEach(member => {
@@ -142,6 +143,9 @@ client.on('ready', async() => {
                     const userId = member.user.id;
 
                     enlistee.active = false;
+                    enlistee.rank = rankList[0];
+                    enlistee.unit = unitList[0];
+                    enlistee.career = careerList[0];
 
                     if (userId === guild.ownerId) enlistee.rank = Object.keys(ranks)[Object.keys(ranks).length - 1];
 
@@ -172,7 +176,7 @@ client.on('ready', async() => {
                                 }
                             })
                         }
-                        if ("K3" === role.name) {
+                        if (settings["employee role"] === role.name) {
                             enlisted[userId].active = true;
                         }
                     });

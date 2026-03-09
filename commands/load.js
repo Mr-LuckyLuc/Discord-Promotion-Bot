@@ -12,7 +12,7 @@ module.exports = {
 
         await interaction.deferReply();
 
-        const [, ranks, units, careers, , , guildId,  ] = unpackInteraction(interaction);
+        const [, ranks, units, careers, settings, , guildId,  ] = unpackInteraction(interaction);
 
         const members = await interaction.guild.members.fetch();
 
@@ -20,10 +20,10 @@ module.exports = {
             return [rank["rank role"], i];
         }));
         const unitList = Object.fromEntries(Object.entries(units).map(([i, unit])=> {
-            return [unit["extra role"]?unit["extra role"]:unit["unit role"], i];
+            return [unit["unit role"], i];
         }));
         const careerList = Object.fromEntries(Object.entries(careers).map(([i, career])=> {
-            return [career["role"], i];
+            return [career["career role"], i];
         }));
 
         const enlisted = {};
@@ -35,6 +35,9 @@ module.exports = {
                 const userId = member.user.id;
                 
                 enlistee.active = false;
+                enlistee.rank = rankList[0];
+                enlistee.unit = unitList[0];
+                enlistee.career = careerList[0];
 
                 if (userId === interaction.guild.ownerId) enlistee.rank = Object.keys(ranks)[Object.keys(ranks).length - 1];
 
@@ -65,7 +68,7 @@ module.exports = {
                             }
                         })
                     }
-                    if ("K3" === role.name) {
+                    if (settings["employee role"] === role.name) {
                         enlisted[userId].active = true;
                     }
 
