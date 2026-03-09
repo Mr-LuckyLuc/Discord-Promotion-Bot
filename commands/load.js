@@ -12,9 +12,9 @@ module.exports = {
 
         await interaction.deferReply();
 
-        const [client, ranks, units, careers, , , guildId,  ] = unpackInteraction(interaction);
+        const [, ranks, units, careers, , , guildId,  ] = unpackInteraction(interaction);
 
-        const members = await interaction.guild.members.cache;
+        const members = await interaction.guild.members.fetch();
 
         const rankList = Object.fromEntries(Object.entries(ranks).map(([i, rank])=> {
             return [rank["rank role"], i];
