@@ -20,14 +20,14 @@ function updateMessage(interaction) {
         if (section.image) embed.setThumbnail(section.image);
 
         for (const subsection of section.subsections) {
-            const filteredPeople = reformatted.filter(person => ((person.rank in subsection.filter.rank) || !subsection.filter.rank.length) && ((person.unit in subsection.filter.unit) || !subsection.filter.unit.length) && ((person.career in subsection.filter.career) || !subsection.filter.unit.length))
+            const filteredPeople = reformatted.filter(person => (subsection.filter.rank.includes(person.rank) || !subsection.filter.rank.length) && (subsection.filter.unit.includes(person.unit) || !subsection.filter.unit.length) && (subsection.filter.career.includes(person.career) || !subsection.filter.career.length));
             if (subsection.inline) {
                 for (const person of filteredPeople) {
-                    message += `**${subsection.title}** <@${person.id}>\n`;
+                    message += `**${subsection.name}** <@${person.id}>\n`;
                     embed.addFields({name: subsection.title, value: ` <@${person.id}>`});
                 }
             } else {
-                message += `**${subsection.title}**\n`;
+                message += `**${subsection.name}**\n`;
                 let list = subsection.content
                 for (const person of filteredPeople) {
                     list += `- <@${person.id}>\n`;
