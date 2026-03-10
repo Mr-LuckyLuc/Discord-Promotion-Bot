@@ -1,5 +1,5 @@
 const {SlashCommandBuilder, MessageFlags, EmbedBuilder} = require('discord.js');
-const { updateMessage } = require('../newMessage');
+const { updateMessage } = require('../message');
 
 module.exports = {
 	data: new SlashCommandBuilder()

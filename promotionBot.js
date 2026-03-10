@@ -76,7 +76,7 @@ client.on('guildMemberAdd', member => {
         
         client.enlisted[member.guild.id][member.id] = enlistee;
 
-        updateEnlisted("person joined")
+        updateEnlisted(client.enlisted[member.guild.id], member.guild.id, "person joined")
     }
 });
 
@@ -84,11 +84,11 @@ client.on('guildMemberRemove', member => {
     
     if (member.user.bot) return;
 
-    enlisted[member.guild.id][member.id].active = false;
+    client.enlisted[member.guild.id][member.id].active = false;
 
-    updateEnlisted('person left');
+    updateEnlisted(client.enlisted[member.guild.id], member.guild.id, 'person left');
 
-    updateMessage(interaction);
+    updateMessage({guildId: member.guild.id, member: member}); //wacky, ik
 
 });
 
@@ -109,93 +109,96 @@ client.on(Events.InteractionCreate, (interaction) => {
 
 client.login(process.env.TOKEN);
 
-client.on('ready', async() => {
-    for (const guildArr of client.guilds.cache) {
-        const guild = guildArr[1];
-        let ranks = client.ranks[guild.id];
-        let units = client.units[guild.id];
-        let careers = client.careers[guild.id];
-        let settings = client.settings[guild.id];
-        let enlisted = client.enlisted[guild.id];
+//Need to figure this out again cuz it aint loading the data
 
-        if (!enlisted) enlisted = {};
-        if (!ranks) ranks = {};
-        if (!units) units = {};
-        if (!careers) careers = {};
+// client.on('ready', async() => {
+//     for (const guildArr of client.guilds.cache) {
+//         const guild = guildArr[1];
+//         let ranks = client.ranks[guild.id];
+//         let units = client.units[guild.id];
+//         let careers = client.careers[guild.id];
+//         let settings = client.settings[guild.id];
+//         let enlisted = client.enlisted[guild.id];
 
-        if (Object.keys(enlisted).length === 0) {
-            const members = await guild.members.fetch();
+//         if (!ranks) ranks = {};
+//         if (!units) units = {};
+//         if (!careers) careers = {};
+//         if (!settings) settings = {};
+//         if (!enlisted) enlisted = {};
 
-            const rankList = Object.fromEntries(Object.entries(ranks).map(([i, rank])=> {
-                return [rank["rank role"], i];
-            }));
-            const unitList = Object.fromEntries(Object.entries(units).map(([i, unit])=> {
-                return [unit["unit role"], i];
-            }));
-            const careerList = Object.fromEntries(Object.entries(careers).map(([i, career])=> {
-                return [career["career role"], i];
-            }));
+//         if (Object.keys(enlisted).length === 0) {
+//             const members = await guild.members.fetch();
 
-            members.forEach(member => {
-                if (!member.user.bot) {
-                    let enlistee = {};
+//             const rankList = Object.fromEntries(Object.entries(ranks).map(([i, rank])=> {
+//                 return [rank["rank role"], i];
+//             }));
+//             const unitList = Object.fromEntries(Object.entries(units).map(([i, unit])=> {
+//                 return [unit["unit role"], i];
+//             }));
+//             const careerList = Object.fromEntries(Object.entries(careers).map(([i, career])=> {
+//                 return [career["career role"], i];
+//             }));
 
-                    const userId = member.user.id;
+//             members.forEach(member => {
+//                 if (!member.user.bot) {
+//                     let enlistee = {};
 
-                    enlistee.active = false;
-                    enlistee.rank = rankList[0];
-                    enlistee.unit = unitList[0];
-                    enlistee.career = careerList[0];
+//                     const userId = member.user.id;
 
-                    if (userId === guild.ownerId) enlistee.rank = Object.keys(ranks)[Object.keys(ranks).length - 1];
+//                     enlistee.active = false;
+//                     enlistee.rank = rankList[0];
+//                     enlistee.unit = unitList[0];
+//                     enlistee.career = careerList[0];
 
-                    enlisted[userId] = enlistee;
+//                     if (userId === guild.ownerId) enlistee.rank = Object.keys(ranks)[Object.keys(ranks).length - 1];
 
-                    const roles = member.roles.cache;
+//                     enlisted[userId] = enlistee;
+
+//                     const roles = member.roles.cache;
                     
-                    roles.forEach(role => {
+//                     roles.forEach(role => {
 
-                        if (role.name in rankList) {
-                            Object.entries(rankList).forEach( ([i, rank]) => {
-                                if (i === role.name) {
-                                    enlisted[userId].rank = rank;
-                                }
-                            })
-                        }
-                        if (role.name in unitList) {
-                            Object.entries(unitList).forEach( ([i, unit]) => {
-                                if (i === role.name) {
-                                    enlisted[userId].unit = unit;
-                                }
-                            })
-                        }
-                        if (role.name in careerList) {
-                            Object.entries(careerList).forEach( ([i, career]) => {
-                                if (i === role.name) {
-                                    enlisted[userId].career = career;
-                                }
-                            })
-                        }
-                        if (settings["employee role"] === role.name) {
-                            enlisted[userId].active = true;
-                        }
-                    });
+//                         if (role.name in rankList) {
+//                             Object.entries(rankList).forEach( ([i, rank]) => {
+//                                 if (i === role.name) {
+//                                     enlisted[userId].rank = rank;
+//                                 }
+//                             })
+//                         }
+//                         if (role.name in unitList) {
+//                             Object.entries(unitList).forEach( ([i, unit]) => {
+//                                 if (i === role.name) {
+//                                     enlisted[userId].unit = unit;
+//                                 }
+//                             })
+//                         }
+//                         if (role.name in careerList) {
+//                             Object.entries(careerList).forEach( ([i, career]) => {
+//                                 if (i === role.name) {
+//                                     enlisted[userId].career = career;
+//                                 }
+//                             })
+//                         }
+//                         if (settings["employee role"] === role.name) {
+//                             enlisted[userId].active = true;
+//                         }
+//                     });
 
-                    // const unitLength = units[enlisted[userId].unit]["unit tag"].length;
-                    // const rankLength = ranks[enlisted[userId].rank]["rank tag"].length;
-                    // const length = unitLength?unitLength+1:0 + rankLength?rankLength+1:0;
+//                     // const unitLength = units[enlisted[userId].unit]["unit tag"].length;
+//                     // const rankLength = ranks[enlisted[userId].rank]["rank tag"].length;
+//                     // const length = unitLength?unitLength+1:0 + rankLength?rankLength+1:0;
                     
-                    const unitLengths = Object.values(units).map( unit => unit["unit tag"].length);
-                    const rankLengths = Object.values(ranks).map( rank => rank["rank tag"].length);
-                    const maxLength = Math.max(unitLengths) + Math.max(rankLengths);
+//                     const unitLengths = Object.values(units).map( unit => unit["unit tag"].length);
+//                     const rankLengths = Object.values(ranks).map( rank => rank["rank tag"].length);
+//                     const maxLength = Math.max(unitLengths) + Math.max(rankLengths);
                     
-                    // const nickname = member.nickname?member.nickname.slice(length).trim():member.user.globalName;
-                    const nickname = member.nickname || member.user.username || member.user.globalName;
-                    enlisted[userId].nickname = nickname.slice(-32+maxLength).trim();
-                }
-            });
+//                     // const nickname = member.nickname?member.nickname.slice(length).trim():member.user.globalName;
+//                     const nickname = member.nickname || member.user.username || member.user.globalName;
+//                     enlisted[userId].nickname = nickname.slice(-32+maxLength).trim();
+//                 }
+//             });
 
-            updateEnlisted(enlisted, guild.id, "loaded");
-        }
-    }
-});
+//             updateEnlisted(enlisted, guild.id, "loaded");
+//         }
+//     }
+// });
