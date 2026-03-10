@@ -35,9 +35,9 @@ module.exports = {
                 const userId = member.user.id;
                 
                 enlistee.active = false;
-                enlistee.rank = rankList[0];
-                enlistee.unit = unitList[0];
-                enlistee.career = careerList[0];
+                enlistee.rank = Object.keys(ranks)[0];
+                enlistee.unit = Object.keys(units)[0];
+                enlistee.career = Object.keys(careers)[0];
 
                 if (userId === interaction.guild.ownerId) enlistee.rank = Object.keys(ranks)[Object.keys(ranks).length - 1];
 
