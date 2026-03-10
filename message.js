@@ -24,7 +24,7 @@ function updateMessage(interaction) {
             if (subsection.inline) {
                 for (const person of filteredPeople) {
                     message += `**${subsection.name}** <@${person.id}>\n`;
-                    embed.addFields({name: subsection.title, value: ` <@${person.id}>`});
+                    embed.addFields({name: subsection.name, value: ` <@${person.id}>`});
                 }
             } else {
                 message += `**${subsection.name}**\n`;
