@@ -10,7 +10,7 @@ module.exports = {
         
 	async execute(interaction) {
         
-        const [, , units, , , enlisted, guildId, interacterId] = unpackInteraction(interaction);
+        const [, ranks, units, , , enlisted, guildId, interacterId] = unpackInteraction(interaction);
 
         // User ----------------
 
@@ -75,6 +75,11 @@ module.exports = {
                 if (user.user.bot) {
                     await userConfirmation.update({content: "No permission to change this soldier (bot)", components: []});
                     return;
+                }
+
+                if (Object.keys(ranks).indexOf(ranks[interacterId].rank) >= Object.keys(ranks).indexOf(enlistee.rank)) {
+                    interaction.editReply("They are to high rank for you to change them.");
+                    return
                 }
 
                 const enlistee = enlisted[enlisteeId];

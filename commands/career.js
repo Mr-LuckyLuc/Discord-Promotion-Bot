@@ -10,7 +10,7 @@ module.exports = {
         
 	async execute(interaction) {
         
-        const [client, , , careers, , enlisted, guildId, interacterId] = unpackInteraction(interaction);
+        const [, ranks, , careers, , enlisted, guildId, interacterId] = unpackInteraction(interaction);
         
         // User ----------------
 

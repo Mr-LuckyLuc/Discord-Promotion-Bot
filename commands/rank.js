@@ -10,7 +10,7 @@ module.exports = {
         
 	async execute(interaction) {
         
-        const [client, ranks, , , settings, enlisted, guildId, interacterId] = unpackInteraction(interaction);
+        const [, ranks, , , , enlisted, guildId, interacterId] = unpackInteraction(interaction);
         const promoterRank = enlisted[interacterId].rank;
         let underranked = false;
 
@@ -29,7 +29,7 @@ module.exports = {
 			.setCustomId('rank')
 			.setPlaceholder('Make a selection!');
         
-		for (const [rank, _] of Object.entries(ranks)) {
+		for (const rank of Object.keys(ranks)) {
 
             if ((rank === promoterRank) || (underranked))  {
                 underranked = true;
@@ -93,6 +93,10 @@ module.exports = {
                 const oldExtra = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["extra role"]);
                 const oldStaffPermissions = await ranks[enlistee.rank]["staff permissions"]!=="" ? interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["staff permissions"]) : undefined;
 
+                if (Object.keys(ranks).indexOf(promoterRank) >= Object.keys(ranks).indexOf(enlistee.rank)) {
+                    interaction.editReply("They are to high rank for you to promote them.");
+                    return
+                }
 
                 userConfirmation.update({
                     content: `What rank do you want to promote to?`,

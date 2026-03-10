@@ -20,7 +20,7 @@ function updateMessage(interaction) {
         if (section.image) embed.setThumbnail(section.image);
 
         for (const subsection of section.subsections) {
-            const filteredPeople = reformatted.filter(person => (person.rank in subsection.filter.rank) && (person.unit in subsection.filter.unit) && (person.career in subsection.filter.career))
+            const filteredPeople = reformatted.filter(person => ((person.rank in subsection.filter.rank) || !subsection.filter.rank.length) && ((person.unit in subsection.filter.unit) || !subsection.filter.unit.length) && ((person.career in subsection.filter.career) || !subsection.filter.unit.length))
             if (subsection.inline) {
                 for (const person of filteredPeople) {
                     message += `**${subsection.title}** <@${person.id}>\n`;
