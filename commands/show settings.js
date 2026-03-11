@@ -19,6 +19,7 @@ module.exports = {
     async execute(interaction) {
 
 		const option = interaction.options.getString('option');
+        const client = interaction.client;
 
         await interaction.reply({ content: JSON.stringify(client[option][interaction.guild.id], null, 4), flags: MessageFlags.Ephemeral }); 
         
