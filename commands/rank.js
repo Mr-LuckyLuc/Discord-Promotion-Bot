@@ -10,7 +10,7 @@ module.exports = {
         
 	async execute(interaction) {
         
-        const [, ranks, , , , enlisted, guildId, interacterId] = unpackInteraction(interaction);
+        const [, ranks, , , settings, enlisted, guildId, interacterId] = unpackInteraction(interaction);
         const promoterRank = enlisted[interacterId].rank;
         let underranked = false;
 
@@ -76,6 +76,7 @@ module.exports = {
             if (userConfirmation.customId === 'user') {
                 const enlisteeId = userConfirmation.values[0];
                 const member = await interaction.guild.members.fetch(enlisteeId);
+                const enlistee = enlisted[enlisteeId];
 
                 if (enlisteeId == interaction.guild.ownerId) {
                     await userConfirmation.update({content: "No permission to change this soldier (server owner)", components: []});
@@ -91,8 +92,6 @@ module.exports = {
                     interaction.editReply("They are to high rank for you to promote them.");
                     return
                 }
-
-                const enlistee = enlisted[enlisteeId];
 
                 const oldRank = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["rank role"]);
                 const oldExtra = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["extra role"]);
@@ -124,7 +123,7 @@ module.exports = {
                             const newRank = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["rank role"]);
                             const newExtra = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["extra role"]);
                             const newStaffPermissions = await ranks[rank]["staff permissions"]!=="" ? interaction.guild.roles.cache.find(role => role.name === ranks[rank]["staff permissions"]) : undefined;
-                            const K3 = await interaction.guild.roles.cache.find(role => role.name === settings["employee role"]);
+                            const employee = await interaction.guild.roles.cache.find(role => role.name === settings["employee role"]);
                             const civ = await interaction.guild.roles.cache.find(role => role.name === settings["civilian role"]);
                             
                             member.roles.remove(oldRank);
@@ -136,7 +135,7 @@ module.exports = {
                             member.roles.remove(oldExtra);
                             member.roles.add(newExtra);
 
-                            member.roles.add(K3);
+                            member.roles.add(employee);
                             member.roles.remove(civ);
 
                             updateNickname(member);

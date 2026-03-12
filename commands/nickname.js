@@ -1,7 +1,6 @@
 const {ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, UserSelectMenuBuilder} = require('discord.js');
 
-const { unpackInteraction } = require('../functions');
-const { updateEnlisted } = require('../functions');
+const { unpackInteraction, updateEnlisted, updateNickname } = require('../functions');
 
 module.exports = {
 	data: new SlashCommandBuilder()

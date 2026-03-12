@@ -1,7 +1,7 @@
 const {StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, UserSelectMenuBuilder} = require('discord.js');
 
 const { updateMessage } = require('../message');
-const { unpackInteraction, updateEnlisted } = require('../functions');
+const { unpackInteraction, updateEnlisted, updateNickname } = require('../functions');
 
 module.exports = {
 	data: new SlashCommandBuilder()

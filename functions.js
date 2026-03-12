@@ -20,7 +20,7 @@ function unpackInteraction(interaction) {
 
 function updateNickname(member) {
     const userId = member.user.id;
-    const guildId = member.guildId;
+    const guildId = member.guild.id;
     const enlisted = client.enlisted[guildId];
     const settings = client.settings[guildId];
     
