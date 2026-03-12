@@ -89,7 +89,7 @@ module.exports = {
                 }
 
                 if (Object.keys(ranks).indexOf(promoterRank) <= Object.keys(ranks).indexOf(enlistee.rank)) {
-                    interaction.editReply("They are to high rank for you to promote them.");
+                    interaction.editReply({content: "They are to high rank for you to promote them.", components: []});
                     return
                 }
 
