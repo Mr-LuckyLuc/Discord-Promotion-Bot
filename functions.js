@@ -69,70 +69,65 @@ function updateEnlisted(enlisted, guildId, message) {
     });
 }
 
-function reloadFiles() {
+async function reloadFiles() {
 
-    fs.readFile(client.files.ranks, "utf8", (err,data) => {
-        if(err){
-            console.error(err);
-        }else{
-            ranks = JSON.parse(data);
-            client.ranks = ranks;
-        }
-    });
+    try {
+        const data = fs.readFileSync(client.files.ranks, "utf8");
+        ranks = JSON.parse(data);
+        client.ranks = ranks;
+    } catch {
+        console.log(err);
+    }
 
-    fs.readFile(client.files.units, "utf8", (err,data) => {
-        if(err){
-            console.error(err);
-        }else{
-            units = JSON.parse(data);
-            client.units = units;
-        }
-    });
+    try {
+        const data = fs.readFileSync(client.files.units, "utf8");
+        units = JSON.parse(data);
+        client.units = units;
+    } catch {
+        console.log(err);
+    }
 
-    fs.readFile(client.files.careers, "utf8", (err,data) => {
-        if(err){
-            console.error(err);
-        }else{
-            careers = JSON.parse(data);
-            client.careers = careers;
-        }
-    });
+    try {
+        const data = fs.readFileSync(client.files.careers, "utf8");
+        careers = JSON.parse(data);
+        client.careers = careers;
+    } catch {
+        console.log(err);
+    }
 
-    // fs.readFile(client.files.awards, "utf8", (err,data) => {
-    //     if(err){
-    //         console.error(err);
-    //     }else{
-    //         awards = data.split(",");
-    //         client.awards = awards;
-    //     }
-    // });
+    // try {
+    //     const data = fs.readFileSync(client.files.awards, "utf8");
+    //     awards = JSON.parse(data);
+    //     client.awards = awards;
+    // } catch {
+    //     console.log(err);
+    // }
 
-    fs.readFile(client.files.enlisted, "utf-8", (err, data) => {
-        if (err) {
-            console.error(err)
-        } else {
-            enlisted = JSON.parse(data);
-            client.enlisted = enlisted;
-        }
-    })
+    try {
+        const data = fs.readFileSync(client.files.enlisted, "utf8");
+        enlisted = data?JSON.parse(data):{};
+        client.enlisted = enlisted;
+    } catch {
+        console.log(err);
+    }
 
-    fs.readFile(client.files.settings, "utf-8", (err, data) => {
-        if (err) {
-            console.error(err)
-        } else {
-            settings = JSON.parse(data);
-            client.settings = settings;
-        }
-    })
+    try {
+        const data = fs.readFileSync(client.files.settings, "utf8");
+        settings = JSON.parse(data);
+        client.settings = settings;
+    } catch {
+        console.log(err);
+    }
 
-    fs.readFile(client.files.stats, "utf-8", (err, data) => {
-        if (err) {
-            console.error(err)
-        } else {
-            stats = JSON.parse(data);
-            client.stats = stats;
-        }
-    })
+    try {
+        const data = fs.readFileSync(client.files.stats, "utf8");
+        stats = JSON.parse(data);
+        client.stats = stats;
+    } catch {
+        console.log(err);
+    }
+
+    return;
 
 }
 
