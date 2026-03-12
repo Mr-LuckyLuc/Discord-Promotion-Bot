@@ -79,6 +79,11 @@ module.exports = {
                     return;
                 }
 
+                if (Object.keys(ranks).indexOf(ranks[interacterId].rank) <= Object.keys(ranks).indexOf(enlistee.rank)) {
+                    interaction.editReply("They are to high rank for you to change them.");
+                    return
+                }
+
                 const oldcareer = interaction.guild.roles.cache.find(role => role.name === careers[enlistee.career]["career role"]);
 
                 userConfirmation.update({

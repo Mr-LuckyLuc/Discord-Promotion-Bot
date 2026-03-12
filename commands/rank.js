@@ -87,16 +87,16 @@ module.exports = {
                     return;
                 }
 
+                if (Object.keys(ranks).indexOf(promoterRank) <= Object.keys(ranks).indexOf(enlistee.rank)) {
+                    interaction.editReply("They are to high rank for you to promote them.");
+                    return
+                }
+
                 const enlistee = enlisted[enlisteeId];
 
                 const oldRank = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["rank role"]);
                 const oldExtra = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["extra role"]);
                 const oldStaffPermissions = await ranks[enlistee.rank]["staff permissions"]!=="" ? interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["staff permissions"]) : undefined;
-
-                if (Object.keys(ranks).indexOf(promoterRank) >= Object.keys(ranks).indexOf(enlistee.rank)) {
-                    interaction.editReply("They are to high rank for you to promote them.");
-                    return
-                }
 
                 userConfirmation.update({
                     content: `What rank do you want to promote to?`,
@@ -124,8 +124,8 @@ module.exports = {
                             const newRank = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["rank role"]);
                             const newExtra = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["extra role"]);
                             const newStaffPermissions = await ranks[rank]["staff permissions"]!=="" ? interaction.guild.roles.cache.find(role => role.name === ranks[rank]["staff permissions"]) : undefined;
-                            const K3 = await interaction.guild.roles.cache.find(role => role.name === "K3");
-                            const civ = await interaction.guild.roles.cache.find(role => role.name === "Civ");
+                            const K3 = await interaction.guild.roles.cache.find(role => role.name === settings["employee role"]);
+                            const civ = await interaction.guild.roles.cache.find(role => role.name === settings["civilian role"]);
                             
                             member.roles.remove(oldRank);
                             member.roles.add(newRank);
