@@ -66,7 +66,7 @@ module.exports = {
 
             if (userConfirmation.customId === 'user') {
                 const enlisteeId = userConfirmation.values[0];
-                const user = await interaction.guild.members.fetch(enlisteeId);
+                const member = await interaction.guild.members.fetch(enlisteeId);
                 const enlistee = enlisted[enlisteeId];
 
                 if (enlisteeId == interaction.guild.ownerId) {
@@ -74,12 +74,12 @@ module.exports = {
                     return;
                 }
                 
-                if (user.user.bot) {
+                if (member.user.bot) {
                     await userConfirmation.update({content: "No permission to change this soldier (bot)", components: []});
                     return;
                 }
 
-                if (Object.keys(ranks).indexOf(ranks[interacterId].rank) <= Object.keys(ranks).indexOf(enlistee.rank)) {
+                if (Object.keys(ranks).indexOf(enlisted[interacterId].rank) <= Object.keys(ranks).indexOf(enlistee.rank)) {
                     interaction.editReply({content: "They are to high rank for you to change them.", components: []});
                     return
                 }
@@ -111,8 +111,8 @@ module.exports = {
                             
                             const newCareer = await interaction.guild.roles.cache.find(role => role.name === careers[career]["career role"]);
                             
-                            user.roles.remove(oldcareer);
-                            user.roles.add(newCareer);
+                            member.roles.remove(oldcareer);
+                            member.roles.add(newCareer);
 
                             updateMessage(interaction);
 

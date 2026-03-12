@@ -56,14 +56,14 @@ module.exports = {
 
             if (userConfirmation.customId === 'user') {
                 const enlisteeId = userConfirmation.values[0];
-                const user = await interaction.guild.members.fetch(enlisteeId);
+                const member = await interaction.guild.members.fetch(enlisteeId);
                 
                 if (enlisteeId == interaction.guild.ownerId) {
                     await userConfirmation.update({content: "No permission to change this soldier (server owner)", components: []});
                     return;
                 }
                 
-                if (user.user.bot) {
+                if (member.user.bot) {
                     await userConfirmation.update({content: "No permission to change this soldier (bot)", components: []});
                     return;
                 }
