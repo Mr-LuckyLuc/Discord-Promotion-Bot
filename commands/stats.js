@@ -29,7 +29,7 @@ module.exports = {
 				.setColor(0x0099ff)
 				.setTitle('Loading ...');
 
-			msg = await channel.send({content: stats.title, embeds: [myEmbed] });
+			msg = await channel.send({content: `# ${stats.title}`, embeds: [myEmbed] });
 
 			client.message = msg
 		}
