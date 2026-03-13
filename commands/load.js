@@ -1,7 +1,7 @@
 const {SlashCommandBuilder, MessageFlags} = require('discord.js');
 
 const { updateMessage } = require('../message');
-const { unpackInteraction, updateEnlisted } = require('../functions');
+const { unpackInteraction, updateEnlisted, reloadFiles } = require('../functions');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -89,6 +89,7 @@ module.exports = {
         });
 
         updateEnlisted(enlisted, guildId, 'loaded');
+        reloadFiles();
         updateMessage(interaction);
         
         interaction.editReply({content: "Loaded", flags: MessageFlags.Ephemeral});

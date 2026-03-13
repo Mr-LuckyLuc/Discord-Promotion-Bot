@@ -111,7 +111,7 @@ client.login(process.env.TOKEN);
 
 //Need to figure this out again cuz it aint loading the data
 
-client.on('ready', async() => {
+client.on('clientReady', async() => {
     for (const guildArr of client.guilds.cache) {
         const guild = guildArr[1];
         let ranks = client.ranks[guild.id];
