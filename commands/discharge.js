@@ -44,6 +44,7 @@ module.exports = {
             if (userConfirmation.customId === 'user') {
                 const enlisteeId = userConfirmation.values[0];
                 const user = await interaction.guild.members.fetch(enlisteeId);
+                const enlistee = enlisted[enlisteeId];
 
                 if (enlisteeId == interaction.guild.ownerId) {
                     await userConfirmation.update({content: "No permission to change this soldier (server owner)", components: []});
@@ -60,7 +61,6 @@ module.exports = {
                     return
                 }
                 
-                const enlistee = enlisted[enlisteeId];
                 
                 enlistee.active = false;
                 enlisted[enlisteeId] = enlistee;

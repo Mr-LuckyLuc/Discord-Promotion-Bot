@@ -65,6 +65,7 @@ module.exports = {
 
             if (userConfirmation.customId === 'user') {
                 const enlisteeId = userConfirmation.values[0];
+                const enlistee = enlisted[enlisteeId];
                 const member = await interaction.guild.members.fetch(enlisteeId);
 
                 if (enlisteeId == interaction.guild.ownerId) {
@@ -81,8 +82,6 @@ module.exports = {
                     interaction.editReply({content: "They are to high rank for you to change them.", components: []});
                     return
                 }
-
-                const enlistee = enlisted[enlisteeId];
 
                 const oldUnit = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["unit role"]);
                 const oldExtra = units[enlistee.unit]["extra role"]!=="" ? interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra role"]) : undefined;
