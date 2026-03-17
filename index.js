@@ -48,8 +48,8 @@ const rest = new REST().setToken(process.env.TOKEN);
     const jsonCommands = commands.map(command => command.data.toJSON())
 
     const data = await rest.put(
-    // Routes.applicationCommands(process.env.CLIENTID), //for all guilds
-    Routes.applicationGuildCommands(process.env.CLIENTID),
+    Routes.applicationCommands(process.env.CLIENTID), //for all guilds
+    // Routes.applicationGuildCommands(process.env.CLIENTID, process.env.GUILDID), //for individual guild
         { body: jsonCommands },);
     console.log(`Successfully reloaded ${data.length} commands.`);
 })();
