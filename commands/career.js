@@ -114,7 +114,7 @@ module.exports = {
                             const newExtras = interaction.guild.roles.cache.find(role => role.name in careers[career]["extra roles"]);
                             
                             if (!oldCareer || !newCareer) {
-                                await interaction.update("You are missing one of the roles, check with the /show command");
+                                await interaction.editReply("You are missing one of the roles, check with the /show command");
                                 return;
                             }
 

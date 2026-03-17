@@ -113,7 +113,7 @@ module.exports = {
                             const newExtras = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra roles"]);
                             
                             if (!oldUnit || !newUnit) {
-                                await interaction.update("You are missing one of the roles, check with the /show command");
+                                await interaction.editReply("You are missing one of the roles, check with the /show command");
                                 return;
                             }
                             

@@ -125,7 +125,7 @@ module.exports = {
                             const employee = await interaction.guild.roles.cache.find(role => role.name === settings["employee role"]);
 
                             if (!oldRank || !civ || !newRank || !employee) {
-                                await interaction.update("You are missing one of the roles, check with the /show command");
+                                await interaction.editReply("You are missing one of the roles, check with the /show command");
                                 return;
                             }
 
