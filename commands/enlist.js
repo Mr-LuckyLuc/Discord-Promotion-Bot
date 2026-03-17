@@ -71,18 +71,19 @@ module.exports = {
                 const employee = interaction.guild.roles.cache.find(role => role.name === settings["employee role"]);
                 const civ = interaction.guild.roles.cache.find(role => role.name === settings["civilian role"]);
 
-                try {
-                    user.roles.add(newRank);
-                    user.roles.add(newRankExtras);
-                    user.roles.add(newUnit);
-                    user.roles.add(newUnitExtras);
-                    user.roles.add(newCareer);
-                    user.roles.add(newCareerExtras);
-                    user.roles.add(employee);
-                    user.roles.remove(civ);
-                } catch (err) {
+                if (!newRank || !newUnit || !newCareer || !civ || !employee) {
                     await interaction.update("You are missing one of the roles, check with the /show command");
+                    return;
                 }
+
+                user.roles.add(newRank);
+                user.roles.add(newRankExtras);
+                user.roles.add(newUnit);
+                user.roles.add(newUnitExtras);
+                user.roles.add(newCareer);
+                user.roles.add(newCareerExtras);
+                user.roles.add(employee);
+                user.roles.remove(civ);
 
                 await user.setNickname(units[enlistee.unit]["unit tag"] + ' ' + ranks[enlistee.rank]["rank tag"] + ' ' + enlistee.nickname);
 

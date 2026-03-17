@@ -112,15 +112,16 @@ module.exports = {
                             const newUnit = await interaction.guild.roles.cache.find(role => role.name === units[unit]["unit role"]);
                             const newExtras = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra roles"]);
                             
-                            try{
-                                member.roles.remove(oldUnit);
-                                member.roles.remove(oldExtras);
-
-                                member.roles.add(newUnit);
-                                member.roles.add(newExtras);
-                            } catch (err) {
+                            if (!oldUnit || !newUnit) {
                                 await interaction.update("You are missing one of the roles, check with the /show command");
+                                return;
                             }
+                            
+                            member.roles.remove(oldUnit);
+                            member.roles.remove(oldExtras);
+
+                            member.roles.add(newUnit);
+                            member.roles.add(newExtras);
                             
                             updateNickname(member);
                             updateMessage(interaction);

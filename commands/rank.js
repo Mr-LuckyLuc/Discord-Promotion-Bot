@@ -94,7 +94,8 @@ module.exports = {
                 }
 
                 const oldRank = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["rank role"]);
-                const oldExtras = interaction.guild.roles.cache.find(role => role.name in ranks[enlistee.rank]["extra roles"]);
+                const oldExtras = interaction.guild.roles.cache.filter(role => role.name in ranks[enlistee.rank]["extra roles"]);
+                const civ = await interaction.guild.roles.cache.find(role => role.name === settings["civilian role"]);
 
                 userConfirmation.update({
                     content: `What rank do you want to promote to?`,
@@ -120,21 +121,21 @@ module.exports = {
                             updateEnlisted(enlisted, guildId, 'rank changed');
                             
                             const newRank = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["rank role"]);
-                            const newExtras = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["extra roles"]);
+                            const newExtras = await interaction.guild.roles.cache.filter(role => role.name === ranks[rank]["extra roles"]);
                             const employee = await interaction.guild.roles.cache.find(role => role.name === settings["employee role"]);
-                            const civ = await interaction.guild.roles.cache.find(role => role.name === settings["civilian role"]);
-                            
-                            try {
-                                member.roles.remove(oldRank);
-                                member.roles.remove(oldExtras);
-                                member.roles.remove(civ);
 
-                                member.roles.add(newRank);
-                                member.roles.add(newExtras);
-                                member.roles.add(employee);
-                            } catch (err) {
+                            if (!oldRank || !civ || !newRank || !employee) {
                                 await interaction.update("You are missing one of the roles, check with the /show command");
+                                return;
                             }
+
+                            member.roles.remove(oldRank);
+                            member.roles.remove(oldExtras);
+                            member.roles.remove(civ);
+
+                            member.roles.add(newRank);
+                            member.roles.add(newExtras);
+                            member.roles.add(employee);
 
                             updateNickname(member);
                             updateMessage(interaction);
