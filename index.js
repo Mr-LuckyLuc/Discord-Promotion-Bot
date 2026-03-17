@@ -74,7 +74,7 @@ client.on('guildMemberAdd', member => {
         enlistee.career = Object.keys(careers)[0];
         enlistee.active = false;
         
-        client.enlisted[member.guild.id][member.id] = enlistee;
+        client.enlisted[member.guild.id][member.user.id] = enlistee;
 
         updateEnlisted(client.enlisted[member.guild.id], member.guild.id, "person joined")
     }
@@ -108,8 +108,6 @@ client.on(Events.InteractionCreate, (interaction) => {
 })
 
 client.login(process.env.TOKEN);
-
-//Need to figure this out again cuz it aint loading the data
 
 client.on('clientReady', async() => {
     for (const guildArr of client.guilds.cache) {
