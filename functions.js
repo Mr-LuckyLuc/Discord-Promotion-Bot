@@ -75,7 +75,7 @@ async function reloadFiles() {
         const data = fs.readFileSync(client.files.ranks, "utf8");
         ranks = JSON.parse(data);
         client.ranks = ranks;
-    } catch {
+    } catch (err) {
         console.log(err);
     }
 
@@ -83,7 +83,7 @@ async function reloadFiles() {
         const data = fs.readFileSync(client.files.units, "utf8");
         units = JSON.parse(data);
         client.units = units;
-    } catch {
+    } catch (err) {
         console.log(err);
     }
 
@@ -91,7 +91,7 @@ async function reloadFiles() {
         const data = fs.readFileSync(client.files.careers, "utf8");
         careers = JSON.parse(data);
         client.careers = careers;
-    } catch {
+    } catch (err) {
         console.log(err);
     }
 
@@ -99,7 +99,7 @@ async function reloadFiles() {
     //     const data = fs.readFileSync(client.files.awards, "utf8");
     //     awards = JSON.parse(data);
     //     client.awards = awards;
-    // } catch {
+    // } catch (err) {
     //     console.log(err);
     // }
 
@@ -107,7 +107,7 @@ async function reloadFiles() {
         const data = fs.readFileSync(client.files.enlisted, "utf8");
         enlisted = data?JSON.parse(data):{};
         client.enlisted = enlisted;
-    } catch {
+    } catch (err) {
         console.log(err);
     }
 
@@ -115,7 +115,7 @@ async function reloadFiles() {
         const data = fs.readFileSync(client.files.settings, "utf8");
         settings = JSON.parse(data);
         client.settings = settings;
-    } catch {
+    } catch (err) {
         console.log(err);
     }
 
@@ -123,7 +123,7 @@ async function reloadFiles() {
         const data = fs.readFileSync(client.files.stats, "utf8");
         stats = JSON.parse(data);
         client.stats = stats;
-    } catch {
+    } catch (err) {
         console.log(err);
     }
 
