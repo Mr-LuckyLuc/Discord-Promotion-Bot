@@ -62,23 +62,27 @@ module.exports = {
         
                 updateEnlisted(enlisted, guildId, 'enlisted');
 
-                const rank = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["rank role"]);
-                const rankExtra = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["extra role"]);
-                const staffPermissions = ranks[enlistee.rank]["staff permissions"]!=="" ? interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["staff permissions"]) : undefined;
-                const unit = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["unit role"]);
-                const unitExtra = units[enlistee.unit]["extra role"]!=="" ? interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra role"]) : undefined;
-                const career = interaction.guild.roles.cache.find(role => role.name === careers[enlistee.career]["career role"]);
+                const newRank = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["rank role"]);
+                const newRankExtras = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["extra roles"]);
+                const newUnit = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["unit role"]);
+                const newUnitExtras = interaction.guild.roles.cache.find(role => role.name in units[enlistee.unit]["extra roles"]);
+                const newCareer = interaction.guild.roles.cache.find(role => role.name === careers[enlistee.career]["career role"]);
+                const newCareerExtras = interaction.guild.roles.cache.find(role => role.name in careers[enlistee.career]["extra roles"]);
                 const employee = interaction.guild.roles.cache.find(role => role.name === settings["employee role"]);
                 const civ = interaction.guild.roles.cache.find(role => role.name === settings["civilian role"]);
 
-                user.roles.add(rank);
-                user.roles.add(rankExtra);
-                staffPermissions && user.roles.add(staffPermissions);
-                user.roles.add(unit);
-                unitExtra && user.roles.add(unitExtra);
-                user.roles.add(career);
-                user.roles.add(employee);
-                user.roles.remove(civ);
+                try {
+                    user.roles.add(newRank);
+                    user.roles.add(newRankExtras);
+                    user.roles.add(newUnit);
+                    user.roles.add(newUnitExtras);
+                    user.roles.add(newCareer);
+                    user.roles.add(newCareerExtras);
+                    user.roles.add(employee);
+                    user.roles.remove(civ);
+                } catch (err) {
+                    await interaction.update("You are missing one of the roles, check with the /show command");
+                }
 
                 await user.setNickname(units[enlistee.unit]["unit tag"] + ' ' + ranks[enlistee.rank]["rank tag"] + ' ' + enlistee.nickname);
 

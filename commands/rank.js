@@ -94,8 +94,7 @@ module.exports = {
                 }
 
                 const oldRank = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["rank role"]);
-                const oldExtra = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["extra role"]);
-                const oldStaffPermissions = await ranks[enlistee.rank]["staff permissions"]!=="" ? interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["staff permissions"]) : undefined;
+                const oldExtras = interaction.guild.roles.cache.find(role => role.name in ranks[enlistee.rank]["extra roles"]);
 
                 userConfirmation.update({
                     content: `What rank do you want to promote to?`,
@@ -121,22 +120,21 @@ module.exports = {
                             updateEnlisted(enlisted, guildId, 'rank changed');
                             
                             const newRank = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["rank role"]);
-                            const newExtra = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["extra role"]);
-                            const newStaffPermissions = await ranks[rank]["staff permissions"]!=="" ? interaction.guild.roles.cache.find(role => role.name === ranks[rank]["staff permissions"]) : undefined;
+                            const newExtras = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["extra roles"]);
                             const employee = await interaction.guild.roles.cache.find(role => role.name === settings["employee role"]);
                             const civ = await interaction.guild.roles.cache.find(role => role.name === settings["civilian role"]);
                             
-                            member.roles.remove(oldRank);
-                            member.roles.add(newRank);
+                            try {
+                                member.roles.remove(oldRank);
+                                member.roles.remove(oldExtras);
+                                member.roles.remove(civ);
 
-                            newStaffPermissions && member.roles.add(newStaffPermissions);
-                            oldStaffPermissions && member.roles.add(oldStaffPermissions);
-
-                            member.roles.remove(oldExtra);
-                            member.roles.add(newExtra);
-
-                            member.roles.add(employee);
-                            member.roles.remove(civ);
+                                member.roles.add(newRank);
+                                member.roles.add(newExtras);
+                                member.roles.add(employee);
+                            } catch (err) {
+                                await interaction.update("You are missing one of the roles, check with the /show command");
+                            }
 
                             updateNickname(member);
                             updateMessage(interaction);

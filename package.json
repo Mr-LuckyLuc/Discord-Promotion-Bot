@@ -2,13 +2,16 @@
   "name": "discord-bots",
   "version": "1.0.0",
   "description": "Originally designed for a faction for Blackhawk Rescue Mission 5, redone for another faction",
-  "main": "promotionBot.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "node --watch-preserve-output index.js", 
+    "docker:build": "docker build -t discord-promotion-bot .",
+    "docker:run": "docker run -d discord-promotion-bot"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Lucky",
+  "license": "MIT",
   "dependencies": {
     "discord.js": "^14.24.1",
     "dotenv": "^16.0.1"

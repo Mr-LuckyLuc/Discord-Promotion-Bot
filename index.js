@@ -49,7 +49,7 @@ const rest = new REST().setToken(process.env.TOKEN);
 
     const data = await rest.put(
     // Routes.applicationCommands(process.env.CLIENTID), //for all guilds
-    Routes.applicationGuildCommands(process.env.CLIENTID, process.env.GUILDID),
+    Routes.applicationGuildCommands(process.env.CLIENTID),
         { body: jsonCommands },);
     console.log(`Successfully reloaded ${data.length} commands.`);
 })();

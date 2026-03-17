@@ -85,6 +85,7 @@ module.exports = {
                 }
 
                 const oldcareer = interaction.guild.roles.cache.find(role => role.name === careers[enlistee.career]["career role"]);
+                const oldExtras = interaction.guild.roles.cache.find(role => role.name in careers[enlistee.career]["extra roles"]);
 
                 userConfirmation.update({
                     content: `What career do you want to assign to?`,
@@ -110,9 +111,16 @@ module.exports = {
                             updateEnlisted(enlisted, guildId, 'career changed');
                             
                             const newCareer = await interaction.guild.roles.cache.find(role => role.name === careers[career]["career role"]);
+                            const newExtras = interaction.guild.roles.cache.find(role => role.name in careers[career]["extra roles"]);
                             
-                            member.roles.remove(oldcareer);
-                            member.roles.add(newCareer);
+                            try{
+                                member.roles.remove(oldcareer);
+                                member.roles.remove(oldExtras);
+                                member.roles.add(newCareer);
+                                member.roles.add(newExtras);
+                            } catch (err) {
+                                await interaction.update("You are missing one of the roles, check with the /show command");
+                            }
 
                             updateMessage(interaction);
 

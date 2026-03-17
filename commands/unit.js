@@ -85,7 +85,7 @@ module.exports = {
                 const enlistee = enlisted[enlisteeId];
 
                 const oldUnit = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["unit role"]);
-                const oldExtra = units[enlistee.unit]["extra role"]!=="" ? interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra role"]) : undefined;
+                const oldExtras = units[enlistee.unit]["extra role"]!=="" ? interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra roles"]) : undefined;
 
                 userConfirmation.update({
                     content: `What unit do you want to transfer to?`,
@@ -111,13 +111,17 @@ module.exports = {
                             updateEnlisted(enlisted, guildId, 'unit changed');
                             
                             const newUnit = await interaction.guild.roles.cache.find(role => role.name === units[unit]["unit role"]);
-                            const newExtra = units[unit]["extra role"]!=="" ? interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra role"]) : undefined;
+                            const newExtras = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra roles"]);
                             
-                            member.roles.remove(oldUnit);
-                            member.roles.add(newUnit);
+                            try{
+                                member.roles.remove(oldUnit);
+                                member.roles.remove(oldExtras);
 
-                            oldExtra && member.roles.remove(oldExtra);
-                            newExtra && member.roles.add(newExtra);
+                                member.roles.add(newUnit);
+                                member.roles.add(newExtras);
+                            } catch (err) {
+                                await interaction.update("You are missing one of the roles, check with the /show command");
+                            }
                             
                             updateNickname(member);
                             updateMessage(interaction);
