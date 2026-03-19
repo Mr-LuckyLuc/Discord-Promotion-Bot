@@ -13,7 +13,7 @@ module.exports = {
         
 	async execute(interaction) {
 
-		const [client, , , , , , guildId, ] = unpackInteraction(interaction);
+		const [client, , , , , , , guildId, ] = unpackInteraction(interaction);
 
 		const stats = client.stats[guildId];
 

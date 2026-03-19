@@ -12,6 +12,7 @@ module.exports = {
                 {name: "rank", value: "ranks"},
                 {name: "unit", value: "units"},
                 {name: "career", value: "careers"},
+                {name: "award", value: "awards"},
                 {name: "settings", value: "settings"},
             )
 		),

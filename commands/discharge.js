@@ -10,7 +10,7 @@ module.exports = {
         
 	async execute(interaction) {
         
-        const [, ranks, units, careers, settings, enlisted, guildId, interacterId] = unpackInteraction(interaction);
+        const [, ranks, units, careers, awards, settings, enlisted, guildId, interacterId] = unpackInteraction(interaction);
 
         // User ----------------
 
@@ -56,8 +56,8 @@ module.exports = {
                     return;
                 }
 
-                if (Object.keys(ranks).indexOf(ranks[interacterId].rank) <= Object.keys(ranks).indexOf(enlistee.rank)) {
-                    interaction.editReply("They are to high rank for you to change them.");
+                if (Object.keys(ranks).indexOf(enlisted[interacterId].rank) <= Object.keys(ranks).indexOf(enlistee.rank)) {
+                    interaction.editReply({content: "They are to high rank for you to change them.", components: []});
                     return
                 }
                 
@@ -67,12 +67,15 @@ module.exports = {
         
                 updateEnlisted(enlisted, guildId, 'discharged');
 
+                const awardList = Object.values(awards).map(award => award.role);
+
                 const oldRank = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["rank role"]);
-                const oldRankExtras = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["extra roles"]);
+                const oldRankExtras = interaction.guild.roles.cache.filter(role => role.name in ranks[enlistee.rank]["extra roles"]);
                 const oldUnit = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["unit role"]);
-                const oldUnitExtras = interaction.guild.roles.cache.find(role => role.name in units[enlistee.unit]["extra roles"]);
+                const oldUnitExtras = interaction.guild.roles.cache.filter(role => role.name in units[enlistee.unit]["extra roles"]);
                 const oldCareer = interaction.guild.roles.cache.find(role => role.name === careers[enlistee.career]["career role"]);
-                const oldCareerExtras = interaction.guild.roles.cache.find(role => role.name in careers[enlistee.career]["extra roles"]);
+                const oldCareerExtras = interaction.guild.roles.cache.filter(role => role.name in careers[enlistee.career]["extra roles"]);
+                const awardRoles = interaction.guild.roles.cache.filter(role => role.name in awardList);
                 const employee = interaction.guild.roles.cache.find(role => role.name === settings["employee role"]);
                 const civ = interaction.guild.roles.cache.find(role => role.name === settings["civilian role"]);
 
@@ -87,6 +90,7 @@ module.exports = {
                 user.roles.remove(oldUnitExtras);
                 user.roles.remove(oldCareer);
                 user.roles.remove(oldCareerExtras);
+                user.roles.remove(awardRoles);
                 user.roles.remove(employee);
                 user.roles.add(civ);
 

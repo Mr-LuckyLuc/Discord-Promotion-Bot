@@ -18,7 +18,7 @@ client.files = {};
 client.files.ranks = "./files/ranks.json";
 client.files.units = "./files/units.json";
 client.files.careers = "./files/careers.json";
-// client.files.awards = "./files/awards.json";
+client.files.awards = "./files/awards.json";
 client.files.enlisted = "./files/enlisted.json";
 client.files.settings = "./files/settings.json";
 client.files.stats = "./files/stats.json";
@@ -118,6 +118,11 @@ client.on('guildCreate', guild => {
     if (!client.careers[guild]) {
         client.careers[guildId] = CAREERDEFAULTS;
         updateFile("careers");
+    }
+
+    if (!client.awards[guild]) {
+        client.awards[guildId] = AWARDDEFAULTS;
+        updateFile("awards");
     }
 
     if (!client.settings[guild]) {

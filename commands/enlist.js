@@ -1,7 +1,7 @@
 const {ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, UserSelectMenuBuilder} = require('discord.js');
 
 const { updateMessage } = require('../utils/message');
-const { unpackInteraction, updateEnlisted } = require('../utils/functions');
+const { unpackInteraction, updateEnlisted, updateNickname } = require('../utils/functions');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -10,7 +10,7 @@ module.exports = {
         
 	async execute(interaction) {
 
-        const [, ranks, units, careers, settings, enlisted, guildId, interacterId] = unpackInteraction(interaction);
+        const [, ranks, units, careers, , settings, enlisted, guildId, interacterId] = unpackInteraction(interaction);
 
         // User ----------------
 
@@ -43,14 +43,14 @@ module.exports = {
 
             if (userConfirmation.customId === 'user') {
                 const enlisteeId = userConfirmation.values[0];
-                const user = await interaction.guild.members.fetch(enlisteeId);
+                const member = await interaction.guild.members.fetch(enlisteeId);
 
                 if (enlisteeId == interaction.guild.ownerId) {
                     await userConfirmation.update({content: "No permission to change this soldier (server owner)", components: []});
                     return;
                 }
                 
-                if (user.user.bot) {
+                if (member.user.bot) {
                     await userConfirmation.update({content: "No permission to change this soldier (bot)", components: []});
                     return;
                 }
@@ -63,11 +63,11 @@ module.exports = {
                 updateEnlisted(enlisted, guildId, 'enlisted');
 
                 const newRank = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["rank role"]);
-                const newRankExtras = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["extra roles"]);
+                const newRankExtras = interaction.guild.roles.cache.filter(role => role.name in ranks[enlistee.rank]["extra roles"]);
                 const newUnit = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["unit role"]);
-                const newUnitExtras = interaction.guild.roles.cache.find(role => role.name in units[enlistee.unit]["extra roles"]);
+                const newUnitExtras = interaction.guild.roles.cache.filter(role => role.name in units[enlistee.unit]["extra roles"]);
                 const newCareer = interaction.guild.roles.cache.find(role => role.name === careers[enlistee.career]["career role"]);
-                const newCareerExtras = interaction.guild.roles.cache.find(role => role.name in careers[enlistee.career]["extra roles"]);
+                const newCareerExtras = interaction.guild.roles.cache.filter(role => role.name in careers[enlistee.career]["extra roles"]);
                 const employee = interaction.guild.roles.cache.find(role => role.name === settings["employee role"]);
                 const civ = interaction.guild.roles.cache.find(role => role.name === settings["civilian role"]);
 
@@ -76,17 +76,16 @@ module.exports = {
                     return;
                 }
 
-                user.roles.add(newRank);
-                user.roles.add(newRankExtras);
-                user.roles.add(newUnit);
-                user.roles.add(newUnitExtras);
-                user.roles.add(newCareer);
-                user.roles.add(newCareerExtras);
-                user.roles.add(employee);
-                user.roles.remove(civ);
+                member.roles.add(newRank);
+                member.roles.add(newRankExtras);
+                member.roles.add(newUnit);
+                member.roles.add(newUnitExtras);
+                member.roles.add(newCareer);
+                member.roles.add(newCareerExtras);
+                member.roles.add(employee);
+                member.roles.remove(civ);
 
-                await user.setNickname(units[enlistee.unit]["unit tag"] + ' ' + ranks[enlistee.rank]["rank tag"] + ' ' + enlistee.nickname);
-
+                updateNickname(member)
                 updateMessage(interaction);
 
                 userConfirmation.update({

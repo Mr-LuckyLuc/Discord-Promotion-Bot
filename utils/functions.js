@@ -11,11 +11,12 @@ function unpackInteraction(interaction) {
     const ranks = client.ranks[guildId];
     const units = client.units[guildId];
     const careers = client.careers[guildId];
+    const awards = client.awards[guildId];
     const enlisted = client.enlisted[guildId];
     const settings = client.settings[guildId];
     const interacterId = interaction.member.user.id;
 
-    return [client, ranks, units, careers, settings, enlisted, guildId, interacterId];
+    return [client, ranks, units, careers, awards, settings, enlisted, guildId, interacterId];
 }
 
 function updateNickname(member) {
@@ -95,13 +96,13 @@ async function reloadFiles() {
         console.log(err);
     }
 
-    // try {
-    //     const data = fs.readFileSync(client.files.awards, "utf8");
-    //     awards = JSON.parse(data);
-    //     client.awards = awards;
-    // } catch (err) {
-    //     console.log(err);
-    // }
+    try {
+        const data = fs.readFileSync(client.files.awards, "utf8");
+        awards = JSON.parse(data);
+        client.awards = awards;
+    } catch (err) {
+        console.log(err);
+    }
 
     try {
         const data = fs.readFileSync(client.files.enlisted, "utf8");

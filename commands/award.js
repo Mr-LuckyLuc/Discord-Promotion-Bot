@@ -1,6 +1,6 @@
 const {StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, UserSelectMenuBuilder} = require('discord.js')
 
-const fs = require('node:fs');
+const { unpackInteraction, updateEnlisted } = require('../utils/functions');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -8,9 +8,8 @@ module.exports = {
 		.setDescription('Award somebody!'),
         
 	async execute(interaction) {
-        const client = interaction.client;
-        const awards = client.awards;
-        const enlisted = client.enlisted;
+
+        const [, ranks, , , awards, , enlisted, ,interacterId ] = unpackInteraction(interaction);
 
         // User ----------------
 
@@ -27,7 +26,7 @@ module.exports = {
 			.setCustomId('award')
 			.setPlaceholder('Make a selection!');
         
-		for (const award of awards) {
+		for (const [award, _] of Object.entries(awards)) {
             awardSelect.addOptions(
 				new StringSelectMenuOptionBuilder()
 					.setLabel(award)
@@ -58,15 +57,29 @@ module.exports = {
 
         try {
             const reply = await interaction.fetchReply();
-            const userConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
+
+            let userConfirmation = {member: {id: 0}};
+
+            while (userConfirmation.member.id !== interacterId) userConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
 
             if (userConfirmation.customId === 'user') {
                 const enlisteeId = userConfirmation.values[0];
-                const user = await interaction.guild.members.fetch(enlisteeId);
+                const member = await interaction.guild.members.fetch(enlisteeId);
+                const enlistee = enlisted[enlisteeId];
 
                 if (enlisteeId == interaction.guild.ownerId) {
                     await userConfirmation.update({content: "No permission to change this soldier (server owner)", components: []});
                     return;
+                }
+                
+                if (member.user.bot) {
+                    await userConfirmation.update({content: "No permission to change this soldier (bot)", components: []});
+                    return;
+                }
+
+                if (Object.keys(ranks).indexOf(enlisted[interacterId].rank) <= Object.keys(ranks).indexOf(enlistee.rank)) {
+                    interaction.editReply({content: "They are to high rank for you to change them.", components: []});
+                    return
                 }
 
                 userConfirmation.update({
@@ -76,26 +89,29 @@ module.exports = {
 
                 try {
                     const reply = await interaction.fetchReply();
-                    const awardConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
+
+                    let awardConfirmation = {member: {id: 0}};
+
+                    while (awardConfirmation.member.id !== interacterId) awardConfirmation = await reply.awaitMessageComponent({ time: 60_000 });
                     
                     if (awardConfirmation.customId === 'award') {
                         const award = awardConfirmation.values[0];
 
                         try{
                             
-                            const section = interaction.guild.roles.cache.find(role => role.name === "-=Service Awards=-");
                             const awardRole = interaction.guild.roles.cache.find(role => role.name === award);
 
-                            if (!(section in user.roles)) {
-                                user.roles.add(section);
+                            if (!awardRole) {
+                                await interaction.editReply({content: "You are missing one of the roles, check with the /show command", components: []});
+                                return;
                             }
 
-                            user.roles.add(awardRole);
+                            member.roles.add(awardRole);
 
-                            console.log("awarded");
+                            console.log("award given");
 
                             awardConfirmation.update({
-                                content: `Awarded ${enlisted[enlisteeId].nickname} the ${award}`,
+                                content: `Awarded <@${enlisteeId}> the ${award} award`,
                                 components: [],
                             });
 

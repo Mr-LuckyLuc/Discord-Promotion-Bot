@@ -19,6 +19,7 @@ module.exports = {
                 {name: "rank", value: "rank"},
                 {name: "unit", value: "unit"},
                 {name: "career", value: "career"},
+				{name: "award", value: "award"},
                 {name: "settings", value: "settings"},
             )
 		),
@@ -45,8 +46,8 @@ module.exports = {
 		switch (option) {
 			case 'rank':
 				for (const rank in Object.values(newJSON)) {
-					if (Object.keys(rank).includes(["rank tag", "rank role", "extra role", "staff permissions"])) {
-            			await interaction.editReply({ content: "Missing correct entries, does it include all of the following:\nrank tag, rank role, extra role, staff permissions", flags: MessageFlags.Ephemeral});
+					if (Object.keys(rank).includes(["rank tag", "rank role", "extra roles"])) {
+            			await interaction.editReply({ content: "Missing correct entries, does it include all of the following:\nrank tag, rank role, extra roles", flags: MessageFlags.Ephemeral});
 						return;
 					}
 				}
@@ -55,8 +56,8 @@ module.exports = {
 				break;
 			case 'unit':
 				for (const unit in Object.values(newJSON)) {
-					if (Object.keys(unit).includes(["unit tag", "unit role", "extra role", "display name"])) {
-            			await interaction.editReply({ content: "Missing correct entries, does it include all of the following:\nunit tag, unit role, extra role, display name", flags: MessageFlags.Ephemeral});
+					if (Object.keys(unit).includes(["unit tag", "unit role", "extra roles"])) {
+            			await interaction.editReply({ content: "Missing correct entries, does it include all of the following:\nunit tag, unit role, extra roles", flags: MessageFlags.Ephemeral});
 						return;
 					}
 				}
@@ -65,17 +66,27 @@ module.exports = {
 				break;
 			case 'career':
 				for (const career in Object.values(newJSON)) {
-					if (Object.keys(career).includes(["career role", "display name"])) {
-            			await interaction.editReply({ content: "Missing correct entries, does it include all of the following:\ncareer role, display name", flags: MessageFlags.Ephemeral});
+					if (Object.keys(career).includes(["career tag", "career role", "extra roles"])) {
+            			await interaction.editReply({ content: "Missing correct entries, does it include all of the following:\ncareer tag, career role, extra roles", flags: MessageFlags.Ephemeral});
 						return;
 					}
 				}
 				client.careers[guildId] = newJSON;
 				updateFile("careers");
 				break;
+			case 'award':
+				for (const award in Object.values(newJSON)) {
+					if (Object.keys(award).includes(["role"])) {
+            			await interaction.editReply({ content: "Missing correct entries, does it include all of the following:\nrole", flags: MessageFlags.Ephemeral});
+						return;
+					}
+				}
+				client.awards[guildId] = newJSON;
+				updateFile("awards");
+				break;
 			case 'settings':
-				if (Object.keys(settings).includes(["civilian role", "empolyee role", "autoroles", "nickname prefixes"])) {
-					await interaction.editReply({ content: "Missing correct entries, does it include all of the following:\civilian role, employee name, autorole, nickname prefixes", flags: MessageFlags.Ephemeral});
+				if (Object.keys(settings).includes(["civilian role", "empolyee role", "autoroles", "nickname prefixes", "available commands"])) {
+					await interaction.editReply({ content: "Missing correct entries, does it include all of the following:\civilian role, employee name, autorole, nickname prefixes, available commands", flags: MessageFlags.Ephemeral});
 					return;
 				}
 				updateFile("settings");

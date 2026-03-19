@@ -10,7 +10,7 @@ module.exports = {
         
 	async execute(interaction) {
         
-        const [, ranks, , careers, , enlisted, guildId, interacterId] = unpackInteraction(interaction);
+        const [, ranks, , careers, , , enlisted, guildId, interacterId] = unpackInteraction(interaction);
         
         // User ----------------
 
@@ -85,7 +85,7 @@ module.exports = {
                 }
 
                 const oldCareer = interaction.guild.roles.cache.find(role => role.name === careers[enlistee.career]["career role"]);
-                const oldExtras = interaction.guild.roles.cache.find(role => role.name in careers[enlistee.career]["extra roles"]);
+                const oldExtras = interaction.guild.roles.cache.filter(role => role.name in careers[enlistee.career]["extra roles"]);
 
                 userConfirmation.update({
                     content: `What career do you want to assign to?`,
@@ -111,7 +111,7 @@ module.exports = {
                             updateEnlisted(enlisted, guildId, 'career changed');
                             
                             const newCareer = await interaction.guild.roles.cache.find(role => role.name === careers[career]["career role"]);
-                            const newExtras = interaction.guild.roles.cache.find(role => role.name in careers[career]["extra roles"]);
+                            const newExtras = interaction.guild.roles.cache.filter(role => role.name in careers[career]["extra roles"]);
                             
                             if (!oldCareer || !newCareer) {
                                 await interaction.editReply({content: "You are missing one of the roles, check with the /show command", components: []});
