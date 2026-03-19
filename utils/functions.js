@@ -131,7 +131,16 @@ async function reloadFiles() {
 
 }
 
-
+function updateFile(file) {
+    fs.writeFile(client.files[file], JSON.stringify(client[file], null, 4), (err) => {
+        if(err){
+            console.log(Date.now());
+            console.log(err);
+        }else{
+            console.log(file+" updated");
+        }
+    });
+}
 
 module.exports = {
     updateClient,
@@ -139,4 +148,5 @@ module.exports = {
     updateNickname,
     updateEnlisted,
     reloadFiles,
+    updateFile
 }

@@ -6,8 +6,9 @@ const path = require('node:path');
 const fs = require('node:fs');
 
 const { Client, Collection, Events, GatewayIntentBits, REST, Routes} = require('discord.js');
-const { updateMessage } = require("./message");
-const { updateClient, updateEnlisted, reloadFiles } = require("./functions");
+const { updateMessage } = require("./utils/message");
+const { updateClient, updateEnlisted, reloadFiles, updateFile } = require("./utils/functions");
+const { CAREERDEFAULTS, UNITDEFAULTS, RANKDEFAULTS, SETTINGSDEFAULTS, STATSDEFAULT } = require("./utils/defaults");
 
 // setup ----------------------------------------------
 
@@ -22,8 +23,28 @@ client.files.enlisted = "./files/enlisted.json";
 client.files.settings = "./files/settings.json";
 client.files.stats = "./files/stats.json";
 
+const rest = new REST().setToken(process.env.TOKEN);
+
 updateClient(client)
-reloadFiles().then(() => client.login(process.env.TOKEN));
+reloadFiles().then(() => client.login(process.env.TOKEN).then(async () => {
+
+    const jsonCommands = commands.map(command => command.data.toJSON());
+
+    const guildIds = [ ... (await client.guilds.fetch()).keys()];
+
+    for (const guildId of guildIds) {
+        const availableCommands = client.settings[guildId]["available commands"];
+        const guildCommands = jsonCommands.filter( command => availableCommands.includes(command.name));
+        
+        const data = await rest.put(
+        // Routes.applicationCommands(process.env.CLIENTID), //for all guilds
+        Routes.applicationGuildCommands(process.env.CLIENTID, guildId), //per guild
+        // Routes.applicationGuildCommands(process.env.CLIENTID, process.env.GUILDID), //for individual guild
+            { body: guildCommands },);
+        
+        console.log(`Successfully reloaded ${data.length} commands to ${guildId}.`);
+    }
+}));
 
 const commandsPath = path.join(__dirname, "commands");
 const commandsFiles = fs.readdirSync(commandsPath);
@@ -41,18 +62,6 @@ for (const file of commandsFiles) {
 }
 
 // Start Bot ----------------------------
-
-const rest = new REST().setToken(process.env.TOKEN);
-
-(async () => {
-    const jsonCommands = commands.map(command => command.data.toJSON())
-
-    const data = await rest.put(
-    Routes.applicationCommands(process.env.CLIENTID), //for all guilds
-    // Routes.applicationGuildCommands(process.env.CLIENTID, process.env.GUILDID), //for individual guild
-        { body: jsonCommands },);
-    console.log(`Successfully reloaded ${data.length} commands.`);
-})();
 
 client.on('guildMemberAdd', member => {
     
@@ -92,6 +101,37 @@ client.on('guildMemberRemove', member => {
 
 });
 
+client.on('guildCreate', guild => {
+
+    const guildId = guild.id;
+
+    if (!client.ranks[guild]) {
+        client.ranks[guild] = RANKDEFAULTS;
+        updateFile("ranks");
+    }
+
+    if (!client.units[guild]) {
+        client.units[guildId] = UNITDEFAULTS;
+        updateFile("units");
+    }
+
+    if (!client.careers[guild]) {
+        client.careers[guildId] = CAREERDEFAULTS;
+        updateFile("careers");
+    }
+
+    if (!client.settings[guild]) {
+        client.settings[guildId] = SETTINGSDEFAULTS;
+        updateFile("settings");
+    }
+
+    if (!client.stats[guild]) {
+        client.stats[guildId] =  STATSDEFAULT;
+        updateFile("stats");
+    }
+
+})
+
 client.on(Events.InteractionCreate, (interaction) => {
     
     if (interaction.isChatInputCommand()) {
@@ -106,8 +146,6 @@ client.on(Events.InteractionCreate, (interaction) => {
         command.execute(interaction);
     }
 })
-
-client.login(process.env.TOKEN);
 
 client.on('clientReady', async() => {
     for (const guildArr of client.guilds.cache) {

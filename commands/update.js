@@ -1,7 +1,6 @@
 const {SlashCommandBuilder, MessageFlags} = require('discord.js');
 
-const fs = require('node:fs');
-const { reloadFiles } = require('../functions');
+const { reloadFiles, updateFile } = require('../utils/functions');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -52,14 +51,7 @@ module.exports = {
 					}
 				}
 				client.ranks[guildId] = newJSON;
-				fs.writeFile(client.files.ranks, JSON.stringify(client.ranks, null, 4), (err) => {
-					if(err){
-						console.log(Date.now());
-						console.log(err);
-					}else{
-						console.log("ranks updated");
-					}
-				});
+				updateFile("ranks");
 				break;
 			case 'unit':
 				for (const unit in Object.values(newJSON)) {
@@ -69,14 +61,7 @@ module.exports = {
 					}
 				}
 				client.units[guildId] = newJSON;
-				fs.writeFile(client.files.units, JSON.stringify(client.units, null, 4), (err) => {
-					if(err){
-						console.log(Date.now());
-						console.log(err);
-					}else{
-						console.log("units updated");
-					}
-				});
+				updateFile("units");
 				break;
 			case 'career':
 				for (const career in Object.values(newJSON)) {
@@ -86,29 +71,14 @@ module.exports = {
 					}
 				}
 				client.careers[guildId] = newJSON;
-				fs.writeFile(client.files.careers, JSON.stringify(client.careers, null, 4), (err) => {
-					if(err){
-						console.log(Date.now());
-						console.log(err);
-					}else{
-						console.log("careers updated");
-					}
-				});
+				updateFile("careers");
 				break;
 			case 'settings':
 				if (Object.keys(settings).includes(["civilian role", "empolyee role", "autoroles", "nickname prefixes"])) {
 					await interaction.editReply({ content: "Missing correct entries, does it include all of the following:\civilian role, employee name, autorole, nickname prefixes", flags: MessageFlags.Ephemeral});
 					return;
 				}
-				client.settings[guildId] = newJSON;
-				fs.writeFile(client.files.settings, JSON.stringify(client.settings, null, 4), (err) => {
-					if(err){
-						console.log(Date.now());
-						console.log(err);
-					}else{
-						console.log("careers updated");
-					}
-				});
+				updateFile("settings");
 				break;
 		}
 

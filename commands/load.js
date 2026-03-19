@@ -1,7 +1,7 @@
 const {SlashCommandBuilder, MessageFlags} = require('discord.js');
 
-const { updateMessage } = require('../message');
-const { unpackInteraction, updateEnlisted, reloadFiles } = require('../functions');
+const { updateMessage } = require('../utils/message');
+const { unpackInteraction, updateEnlisted, reloadFiles } = require('../utils/functions');
 
 module.exports = {
 	data: new SlashCommandBuilder()
