@@ -1,4 +1,7 @@
-const {SlashCommandBuilder, MessageFlags} = require('discord.js');
+const {Collection, SlashCommandBuilder, MessageFlags, REST, Routes} = require('discord.js');
+
+const path = require('node:path');
+const fs = require('node:fs');
 
 const { reloadFiles, updateFile } = require('../utils/functions');
 
@@ -52,7 +55,7 @@ module.exports = {
 					}
 				}
 				client.ranks[guildId] = newJSON;
-				updateFile("ranks");
+				await updateFile("ranks");
 				break;
 			case 'unit':
 				for (const unit in Object.values(newJSON)) {
@@ -62,7 +65,7 @@ module.exports = {
 					}
 				}
 				client.units[guildId] = newJSON;
-				updateFile("units");
+				await updateFile("units");
 				break;
 			case 'career':
 				for (const career in Object.values(newJSON)) {
@@ -72,7 +75,7 @@ module.exports = {
 					}
 				}
 				client.careers[guildId] = newJSON;
-				updateFile("careers");
+				await updateFile("careers");
 				break;
 			case 'award':
 				for (const award in Object.values(newJSON)) {
@@ -82,14 +85,50 @@ module.exports = {
 					}
 				}
 				client.awards[guildId] = newJSON;
-				updateFile("awards");
+				await updateFile("awards");
 				break;
 			case 'settings':
 				if (Object.keys(settings).includes(["civilian role", "empolyee role", "autoroles", "nickname prefixes", "available commands"])) {
 					await interaction.editReply({ content: "Missing correct entries, does it include all of the following:\civilian role, employee name, autorole, nickname prefixes, available commands", flags: MessageFlags.Ephemeral});
 					return;
 				}
-				updateFile("settings");
+
+				const oldCommands = client.settings[guildId]["available commands"];
+
+				client.settings[guildId] = newJSON;
+
+				if (!(oldCommands.sort().join("&")===client.settings[guildId]["available commands"].sort().join("&"))) {
+					const commandsPath = __dirname
+					const commandsFiles = fs.readdirSync(commandsPath);
+
+					const commands = new Collection();
+
+					for (const file of commandsFiles) {
+						const filePath = path.join(commandsPath, file);
+						const command = require(filePath);
+						if ('data' in command && 'execute' in command) {
+							commands.set(command.data.name, command);
+						} else {
+							console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+						}
+					}
+
+					const rest = new REST().setToken(process.env.TOKEN);
+				
+					const jsonCommands = commands.map(command => command.data.toJSON());
+					const availableCommands = client.settings[guildId]["available commands"];
+					const guildCommands = jsonCommands.filter( command => availableCommands.includes(command.name));
+					
+					const data = await rest.put(
+					// Routes.applicationCommands(process.env.CLIENTID), //for all guilds
+					Routes.applicationGuildCommands(process.env.CLIENTID, guildId), //per guild
+					// Routes.applicationGuildCommands(process.env.CLIENTID, process.env.GUILDID), //for individual guild
+						{ body: guildCommands },);
+					
+					console.log(`Successfully reloaded ${data.length} commands to ${guildId}.`);
+				}
+
+				await updateFile("settings");
 				break;
 		}
 

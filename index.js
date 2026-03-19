@@ -23,6 +23,21 @@ client.files.enlisted = "./files/enlisted.json";
 client.files.settings = "./files/settings.json";
 client.files.stats = "./files/stats.json";
 
+const commandsPath = path.join(__dirname, "commands");
+const commandsFiles = fs.readdirSync(commandsPath);
+
+const commands = new Collection();
+
+for (const file of commandsFiles) {
+    const filePath = path.join(commandsPath, file);
+    const command = require(filePath);
+    if ('data' in command && 'execute' in command) {
+        commands.set(command.data.name, command);
+    } else {
+        console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+    }
+}
+
 const rest = new REST().setToken(process.env.TOKEN);
 
 updateClient(client)
@@ -46,20 +61,6 @@ reloadFiles().then(() => client.login(process.env.TOKEN).then(async () => {
     }
 }));
 
-const commandsPath = path.join(__dirname, "commands");
-const commandsFiles = fs.readdirSync(commandsPath);
-
-const commands = new Collection();
-
-for (const file of commandsFiles) {
-    const filePath = path.join(commandsPath, file);
-    const command = require(filePath);
-    if ('data' in command && 'execute' in command) {
-        commands.set(command.data.name, command);
-    } else {
-        console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
-    }
-}
 
 // Start Bot ----------------------------
 
