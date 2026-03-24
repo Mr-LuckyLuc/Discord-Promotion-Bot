@@ -88,7 +88,7 @@ module.exports = {
             }
         });
 
-        updateEnlisted(enlisted, guildId, 'loaded');
+        await updateEnlisted(enlisted, guildId, 'loaded');
         await reloadFiles();
         updateMessage(interaction);
         

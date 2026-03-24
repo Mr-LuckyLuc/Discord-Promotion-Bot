@@ -58,16 +58,15 @@ function updateNickname(member) {
     member.setNickname(nickname);
 }
 
-function updateEnlisted(enlisted, guildId, message) {
+async function updateEnlisted(enlisted, guildId, message) {
     client.enlisted[guildId] = enlisted;
-    fs.writeFile(client.files.enlisted, JSON.stringify(client.enlisted, null, 4), (err) => {
-        if(err){
-            console.log(Date.now());
-            console.log(err);
-        }else{
-            console.log(message);
-        }
-    });
+    try{
+    fs.writeFileSync(client.files.enlisted, JSON.stringify(client.enlisted, null, 4))
+        console.log(message)
+    } catch (err) {
+        console.log(Date.now());
+        console.log(err);
+    }
 }
 
 async function reloadFiles() {
