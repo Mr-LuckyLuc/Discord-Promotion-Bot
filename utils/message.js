@@ -5,6 +5,10 @@ const { unpackInteraction } = require('./functions');
 function updateMessage(interaction) {
 
     const [client, , , , , , enlisted, guildId, ] = unpackInteraction(interaction);
+    if (!enlisted) {
+        console.log("enlisted not loaded")
+        return;
+    }
     const stats = client.stats[guildId];
     const reformatted = Object.entries(enlisted).map(arr => {arr[1].id = arr[0]; return arr[1]}).filter(enlistee => enlistee.active);
 
