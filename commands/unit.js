@@ -84,7 +84,7 @@ module.exports = {
                 }
 
                 const oldUnit = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["unit role"]);
-                const oldExtras = units[enlistee.unit]["extra role"]!=="" ? interaction.guild.roles.cache.find(role => role.name in units[enlistee.unit]["extra roles"]) : undefined;
+                const oldExtras = interaction.guild.roles.cache.find(role => role.name in units[enlistee.unit]["extra roles"]);
 
                 userConfirmation.update({
                     content: `What unit do you want to transfer to?`,
