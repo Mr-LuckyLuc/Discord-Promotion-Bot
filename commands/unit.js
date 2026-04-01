@@ -84,7 +84,7 @@ module.exports = {
                 }
 
                 const oldUnit = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["unit role"]);
-                const oldExtras = units[enlistee.unit]["extra role"]!=="" ? interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra roles"]) : undefined;
+                const oldExtras = units[enlistee.unit]["extra role"]!=="" ? interaction.guild.roles.cache.find(role => role.name in units[enlistee.unit]["extra roles"]) : undefined;
 
                 userConfirmation.update({
                     content: `What unit do you want to transfer to?`,
@@ -109,8 +109,8 @@ module.exports = {
                     
                             updateEnlisted(enlisted, guildId, 'unit changed');
                             
-                            const newUnit = await interaction.guild.roles.cache.find(role => role.name === units[unit]["unit role"]);
-                            const newExtras = interaction.guild.roles.cache.find(role => role.name === units[enlistee.unit]["extra roles"]);
+                            const newUnit = interaction.guild.roles.cache.find(role => role.name === units[unit]["unit role"]);
+                            const newExtras = interaction.guild.roles.cache.find(role => role.name in units[unit]["extra roles"]);
                             
                             if (!oldUnit || !newUnit) {
                                 await interaction.editReply({content: "You are missing one of the roles, check with the /show command", components: []});

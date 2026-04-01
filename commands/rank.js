@@ -95,7 +95,7 @@ module.exports = {
 
                 const oldRank = interaction.guild.roles.cache.find(role => role.name === ranks[enlistee.rank]["rank role"]);
                 const oldExtras = interaction.guild.roles.cache.filter(role => role.name in ranks[enlistee.rank]["extra roles"]);
-                const civ = await interaction.guild.roles.cache.find(role => role.name === settings["civilian role"]);
+                const civ = interaction.guild.roles.cache.find(role => role.name === settings["civilian role"]);
 
                 userConfirmation.update({
                     content: `What rank do you want to promote to?`,
@@ -120,9 +120,9 @@ module.exports = {
                     
                             updateEnlisted(enlisted, guildId, 'rank changed');
                             
-                            const newRank = await interaction.guild.roles.cache.find(role => role.name === ranks[rank]["rank role"]);
-                            const newExtras = await interaction.guild.roles.cache.filter(role => role.name === ranks[rank]["extra roles"]);
-                            const employee = await interaction.guild.roles.cache.find(role => role.name === settings["employee role"]);
+                            const newRank = interaction.guild.roles.cache.find(role => role.name === ranks[rank]["rank role"]);
+                            const newExtras = interaction.guild.roles.cache.filter(role => role.name === ranks[rank]["extra roles"]);
+                            const employee = interaction.guild.roles.cache.find(role => role.name === settings["employee role"]);
 
                             if (!oldRank || !civ || !newRank || !employee) {
                                 await interaction.editReply({content: "You are missing one of the roles, check with the /show command", components: []});

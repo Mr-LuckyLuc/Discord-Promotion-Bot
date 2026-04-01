@@ -110,7 +110,7 @@ module.exports = {
                     
                             updateEnlisted(enlisted, guildId, 'career changed');
                             
-                            const newCareer = await interaction.guild.roles.cache.find(role => role.name === careers[career]["career role"]);
+                            const newCareer = interaction.guild.roles.cache.find(role => role.name === careers[career]["career role"]);
                             const newExtras = interaction.guild.roles.cache.filter(role => role.name in careers[career]["extra roles"]);
                             
                             if (!oldCareer || !newCareer) {
